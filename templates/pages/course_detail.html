@@ -1,0 +1,445 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Home
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+<section class="px-12 space2-bg">
+    <div class="flex items-center justify-center gap-6 ">
+        <h1 class="my-12 text-2xl font-semibold tracking-wider text-center border-b-2 pb-2">
+            {{selected_course.course_name}} <span class="text-xs">Course</span></h1>
+
+
+        <h2>Project : {% if selected_course.project %}
+            {{selected_course.project.project_name}}
+            {% else %}
+            Public Course
+            {% endif %} </h2>
+    </div>
+    <div class="course-info flex items-center justify-center">
+
+        <div class="flex items-center backdrop-blur justify-center gap-6">
+            <div class="">
+                <h2 class="mb-4 pb-2 font-semibold  border-b-2 w-fit ">Responsable Employee</h2>
+                <div class="flex border-2 shadow-lg w-fit items-center justify-start gap-8 rounded-lg">
+                    <img src="{{course_sales.employee_photo.url}}" alt="employee" class="w-24 h-24">
+                    <div class="p-2">
+                        <h2> {{course_sales.firstname}} {{course_sales.lastname}}</h2>
+                        <p class="text-slate-500 text-xs"><i class="fa-solid fa-location-dot"></i> {{course_sales.location}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center backdrop-blur shadow-lg rounded-lg justify-center gap-6 border overflow-hidden">
+                <div class="w-[300px]">
+                    <img src="{% static 'images/boost2.png' %}" alt="boost" class="rounded-l-lg">
+                </div>
+                <div class="p-4 flex text-start items-start justify-center gap-2 flex-col">
+                    <h2 class="text-xl border-b-4">Client :{% if selected_course.project %}
+                        {{selected_course.project.client.client_name}}
+                        {% else %}
+                        Public Course
+                    {% endif %} </h2>
+                    <p class="text-slate-600 text-sm">Field : {{selected_course.field}}</p>
+                    <p class="text-slate-600 text-sm">Location : {{selected_course.location}}</p>
+                    <p class="text-slate-600 text-sm">Duration : {{selected_course.course_duration}} days</p>
+                    <p class="text-slate-600 text-sm">Category : {{selected_course.course_category}}</p>
+
+                    <p class=" text-sm text-slate-600">hotel : {% if selected_course.hotel %}
+                        {{selected_course.hotel.hotel_name}}
+                        {% else %}
+                        Not located yet
+                        {% endif %} </p>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between">
+
+
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="course flex-1 pl-12">
+       {% csrf_token %}
+        <div
+            class="grid grid-cols-1 md:grid-cols-3 items-center justify-center place-content-center place-items-center lg:grid-cols-4 gap-4 mt-12 mx-auto">
+
+            <div
+                class="card backdrop-blur w-[250px] h-[250px] shadow-lg flex transition-all duration-300 items-center flex-col justify-center relative rounded-lg hover:shadow-2xl">
+                <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                    id="rfp-dropdown">
+                    <div  class="p-2 relative ">
+                        <div onclick=hide_box3() class="absolute  top-0 right-2 cursor-pointer"><i
+                                class="fa-solid fa-xmark"></i></div>
+                        Status :
+                        <select name="material_status"  value="{{selected_course.material_status}}" id="" class="rounded-lg">
+                            {% if selected_course.material_status == 'not Receieved' %}
+                            <option value="not Receieved"  selected>not Receieved</option>
+                            {% else %}
+                            <option value="not Receieved" >not Receieved</option>
+                            {% endif %}
+
+                            {% if selected_course.material_status == 'Receieved' %}
+                            <option value="Receieved" selected>Receieved</option>
+                            {% else %}
+                            <option value="Receieved">Receieved</option>
+                            {% endif %}
+
+
+                            {% if selected_course.material_status == 'Ready for Design' %}
+                            <option value="Ready for Design" selected>Ready for Design</option>
+                            {% else %}
+                            <option value="Ready for Design">Ready for Design</option>
+                            {% endif %}
+
+                            
+                            
+
+                            
+                            {% if selected_course.material_status == 'Ready to Print' %}
+                            <option value="Ready to Print" selected>Ready to Print</option>
+                            {% else %}
+                            <option value="Ready to Print">Ready to Print</option>
+                            {% endif %}
+
+                            {% if selected_course.material_status == 'printed and Ready for Delivery' %}
+                            <option value="printed and Ready for Delivery" selected>printed and Ready for Delivery</option>
+                            {% else %}
+                            <option value="printed and Ready for Delivery">printed and Ready for Delivery</option>
+                            {% endif %}
+
+
+                            {% if selected_course.material_status == 'delivered' %}
+                            <option value="delivered" selected>delivered</option>
+                            {% else %}
+                            <option value="delivered">delivered</option>
+                            {% endif %}
+
+
+
+
+                        </select>
+                        
+                        <div class="p-2">
+
+                            <input type="file" name="material_file" value="{{selected_course.material_file}}" id="">
+                        </div>
+                    </div>
+
+                </div>
+                <h2 class="text-xl font-semibold"><i class="fa-solid fa-comment-dots"></i> Materials</h2>
+                {% if selected_course.material_status == 'not Receieved' %}
+                <div class="absolute truncate top-4 left-4 -z-10 bg-slate-200 p-2 flex items-center justify-center rounded-full text-xs">
+                    {{selected_course.material_status}}</div>
+                {% elif selected_course.material_status == 'Receieved' %}
+                <div class="absolute truncate top-4 left-4 -z-10 bg-indigo-200 p-2 flex items-center justify-center rounded-full text-xs">
+                    {{selected_course.material_status}}</div>
+                {% elif selected_course.material_status == 'Ready for Design' %}
+                    <div class="absolute truncate top-4 left-4 -z-10 bg-yellow-200 p-2 flex items-center justify-center rounded-full text-xs">
+                        {{selected_course.material_status}}</div>
+                {% elif selected_course.material_status == 'Ready to Print' %}
+                    <div class="absolute truncate top-4 left-4 -z-10 bg-orange-200 p-2 flex items-center justify-center rounded-full text-xs">
+                            {{selected_course.material_status}}</div>
+                {% elif selected_course.material_status == 'printed and Ready for Delivery' %}
+                    <div class="absolute truncate top-4 left-4 -z-10 bg-lime-200 p-2 flex items-center justify-center rounded-full text-xs">
+                     {{selected_course.material_status}}</div>
+                
+                {% elif selected_course.material_status == 'delivered' %}
+                     <div class="absolute truncate top-4 left-4 -z-10 bg-green-200 p-2 flex items-center justify-center rounded-full text-xs">
+                      {{selected_course.material_status}}</div>
+                 
+                {% endif %}
+
+
+                <!-- <div class="absolute truncate top-4 left-4 -z-10 bg-yellow-200 py-2 px-4 rounded-lg">
+                    {{selected_course.material_status}}</div> -->
+
+                <button type="button" onclick="show_box3()" class="btn-primary">
+                    Edit
+                </button>
+                {% if selected_course.material_file %}
+                  
+                <button class="pt-2 hover:underline">
+                    <a class="text-green-500"  href="{{selected_course.material_file.url}}">Show Materials</a>
+                </button>
+                {% else %}
+                <p class="pt-2 text-red-300">No files Uploaded</p>
+                {% endif %}
+            </div>
+
+            <div
+                class="card backdrop-blur w-[250px] h-[250px] shadow-lg flex transition-all duration-300  items-center flex-col justify-center relative rounded-lg hover:shadow-2xl">
+                <h2 class="text-xl font-semibold"><i class="fa-solid fa-envelope-open-text"></i> Attendance</h2>
+                <div class="absolute top-4 left-4 -z-10 bg-yellow-200 flex items-center w-10 h-10 justify-center rounded-full text-xs">
+                    {{selected_course.number_of_attendees}}</div>
+
+                <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                    id="Proposal-dropdown">
+                    <div class="p-2 relative ">
+                        <div onclick=hide_box() class="absolute  top-0 right-2 cursor-pointer"><i
+                                class="fa-solid fa-xmark"></i></div>
+                                <div>
+                                    <input type="number" name="number_of_attendees" id="" value="{{selected_course.number_of_attendees}}">
+                                </div>
+                        <div class="p-2">
+                        
+                            <input name="attendance_file" value="{{selected_course.attendance_file}}" type="file" name="" id="">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick=show_box() class="btn-primary">
+                    Edit
+                </button>
+                {% if selected_course.attendance_file %}
+                  
+                <button class="pt-2 hover:underline">
+                    <a class="text-green-500" href="{{selected_course.attendance_file.url}}">Show Attendance</a>
+                </button>
+                {% else %}
+                <p class="pt-2 text-red-300">No files Uploaded</p>
+                {% endif %}
+            </div>
+
+            <div
+                class="card backdrop-blur w-[250px] h-[250px] shadow-lg flex transition-all duration-300  items-center flex-col justify-center relative rounded-lg hover:shadow-2xl ">
+                <h2 class="text-xl font-semibold"><i class="fa-solid fa-file-invoice-dollar"></i> Certificates</h2>
+                <div class="absolute top-4 left-4 -z-10 truncate bg-green-200 p-2 flex items-center justify-center rounded-full text-xs">
+                    {{selected_course.certificate_status}}</div>
+                <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                    id="invoice-dropdown">
+                    <div  class="p-2 relative ">
+                        <div onclick=hide_box2() class="absolute  top-0 right-2 cursor-pointer"><i
+                                class="fa-solid fa-xmark"></i></div>
+                        Status :
+                        <select name="certificate_status" value="{{selected_course.certificate_status}}" id="">
+
+                            {% if selected_course.certificate_status == 'no action' %}
+                            <option value="no action" selected>no action</option>
+                            {% else %}
+                            <option value="no action">no action</option>
+                            {% endif %}
+
+                            {% if selected_course.certificate_status == 'Names sheet recieved' %}
+                            <option value="Names sheet recieved" selected>Names sheet recieved</option>
+                            {% else %}
+                            <option value="Names sheet recieved">Names sheet recieved</option>
+
+                            {% endif %}
+
+                            
+                            {% if selected_course.certificate_status == 'Ready for Design' %}
+                            <option value="Ready for Design" selected>Ready for Design</option>
+                            {% else %}
+                            <option value="Ready for Design">Ready for Design</option>
+                            {% endif %}
+
+                            {% if selected_course.certificate_status == 'Ready to Print' %}
+                            <option value="Ready to Print" selected>Ready to Print</option>
+                            {% else %}
+                            <option value="Ready to Print">Ready to Print</option>
+                            {% endif %}
+
+
+                            {% if selected_course.certificate_status == 'printed and Ready for Delivery' %}
+                            <option value="printed and Ready for Delivery" selected>printed and Ready for Delivery</option>
+                            {% else %}
+                            <option value="printed and Ready for Delivery">printed and Ready for Delivery</option>
+                            {% endif %}
+
+
+                            {% if selected_course.certificate_status == 'delivered' %}
+
+                            <option value="delivered" selected>delivered</option>
+                            {% else %}
+
+                            <option value="delivered">delivered</option>
+                            {% endif %}
+                            
+                            
+                            
+
+                        </select>
+                        <div class="p-2">
+
+                            <input type="file" name="certificates_file" value="{{selected_course.certificates_file}}" id="">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick=show_box2() class="btn-primary">
+                    Edit
+                </button>
+                {% if selected_course.certificates_file %}
+                  
+                <button class="pt-2 hover:underline">
+                    <a class="text-green-500" href="{{selected_course.certificates_file.url}}">Show Attendance</a>
+                </button>
+                {% else %}
+                <p class="pt-2 text-red-300">No files Uploaded</p>
+                {% endif %}
+            </div>
+
+            <div
+                class="card backdrop-blur w-[250px] mx-2 h-[250px] shadow-lg flex transition-all duration-300  items-center flex-col justify-center relative rounded-lg hover:shadow-2xl ">
+                <h2 class="text-xl font-semibold"><i class="fa-solid fa-file-invoice-dollar"></i> Feedback</h2>
+                <div class="absolute top-4 left-4 -z-10  bg-green-200 w-10 h-10 flex items-center justify-center rounded-full text-xs">
+                    {{selected_course.number_of_attendees}}</div>
+                <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                    id="feedback-dropdown">
+                    <div  class="p-2 relative ">
+                        <div onclick=hide_box4() class="absolute  top-0 right-2 cursor-pointer"><i
+                                class="fa-solid fa-xmark"></i></div>
+                        <div class="p-2">
+
+                            <input name="feedback" type="file" value="{{selected_course.feedback}}" id="">
+                        </div>
+
+                    </div>
+                </div>
+                <button type="button"  onclick=show_box4() class="btn-primary">
+                    Edit
+                </button>
+
+                {% if selected_course.feedback %}
+                  
+                <button class="pt-2 hover:underline">
+                    <a class="text-green-500" href="{{selected_course.feedback.url}}">Show Attendance</a>
+                </button>
+                {% else %}
+                <p class="pt-2 text-red-300">No files Uploaded</p>
+                {% endif %}
+            </div>
+
+
+            <div
+                class="card backdrop-blur w-[250px] mx-2 h-[250px] shadow-lg flex transition-all duration-300  items-center flex-col justify-center relative rounded-lg hover:shadow-2xl self-center">
+                <h2 class="text-xl font-semibold"><i class="fa-solid fa-file-invoice-dollar"></i> Gift Items</h2>
+                <div class="absolute top-4 left-4 -z-10  bg-green-200 w-10 h-10 flex items-center justify-center rounded-full text-xs">
+                    {{selected_course.number_of_gift}}</div>
+                <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                    id="gift-dropdown">
+                    <h3>Number of items {{selected_course.number_of_gift}}</h3>
+
+                    <div class="p-2 relative ">
+                        <div onclick=hide_box5() class="absolute  top-0 right-2 cursor-pointer"><i
+                                class="fa-solid fa-xmark"></i></div>
+                        <div class="p-4">
+
+                            <input type="number"  value="{{selected_course.number_of_gift}}" name="number_of_gift" class="rounded-lg w-24" id="">
+                        </div>
+                    </div>
+                </div>
+                <button type="button"  onclick=show_box5() class="btn-primary">
+                    Edit
+                </button>
+            </div>
+
+
+            <div
+            class="card backdrop-blur w-[250px] mx-2 h-[250px] shadow-lg flex transition-all duration-300  items-center flex-col justify-center relative rounded-lg hover:shadow-2xl self-center ">
+            <h2 class="text-xl font-semibold"><i class="fa-solid fa-file-invoice-dollar"></i> Pre and Post files</h2>
+            <!-- <div class="absolute top-4 left-4 -z-10  bg-green-200 py-2 px-4 rounded-lg">
+                {{selected_course.number_of_attendees}}</div> -->
+            <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                id="prepost-dropdown">
+                <div  class="p-2 relative ">
+                    <div onclick=hide_box6() class="absolute  top-0 right-2 cursor-pointer"><i
+                            class="fa-solid fa-xmark"></i></div>
+                    <div class="p-2">
+
+                        <input type="file" name="pre_post_files" value="{{selected_course.pre_post_files}}" id="">
+                    </div>
+
+                </div>
+            </div>
+            <button type="button"  onclick=show_box6() class="btn-primary">
+                Edit
+            </button>
+            {% if selected_course.pre_post_files %}
+                  
+            <button class="pt-2 hover:underline">
+                <a  class="text-green-500" href="{{selected_course.pre_post_files.url}}">Show Attendance</a>
+            </button>
+            {% else %}
+            <p class="pt-2 text-red-300">No files Uploaded</p>
+            {% endif %}
+        </div>
+
+
+        <button class="btn-primary border-2 backdrop-blur w-full text-xl">Update</button>
+
+        </div>
+
+    </form>
+    </div>
+
+
+
+</section>
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    const propsal_box = document.getElementById('Proposal-dropdown')
+    const invoice_box = document.getElementById('invoice-dropdown')
+    const rfp_box = document.getElementById('rfp-dropdown')
+    const feedback_box = document.getElementById("feedback-dropdown")
+    const gift_box = document.getElementById("gift-dropdown")
+    const prepost_box = document.getElementById("prepost-dropdown")
+
+
+    const hide_box6 = () => {
+        prepost_box.classList.add('hidden')
+    }
+    const show_box6 = () => {
+        prepost_box.classList.remove('hidden')
+    }
+
+    const hide_box5 = () => {
+        gift_box.classList.add('hidden')
+    }
+    const show_box5 = () => {
+        gift_box.classList.remove('hidden')
+    }
+
+    const hide_box4 = () => {
+        feedback_box.classList.add('hidden')
+    }
+    const show_box4 = () => {
+        feedback_box.classList.remove('hidden')
+    }
+
+
+    const hide_box3 = () => {
+        rfp_box.classList.add('hidden')
+    }
+    const show_box3 = () => {
+        rfp_box.classList.remove('hidden')
+    }
+
+    const hide_box2 = () => {
+        invoice_box.classList.add('hidden')
+    }
+    const show_box2 = () => {
+        invoice_box.classList.remove('hidden')
+    }
+
+
+    const hide_box = () => {
+        propsal_box.classList.add('hidden')
+    }
+    const show_box = () => {
+        propsal_box.classList.remove('hidden')
+    }
+</script>
+{% endblock script %}

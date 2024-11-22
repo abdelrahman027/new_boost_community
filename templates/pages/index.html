@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Homes
+{% endblock title %}
+
+
+{% block content %}
+<main>
+ 
+    <section class="w-full bg-[linear-gradient(45deg,#14141499,#2a2a2ac4),url('/static/images/hub-bg.jpg')] bg-cover  h-[calc(100vh)] flex items-center justify-center flex-col ">
+            <div class="text-white text-center mb-2 flex items-center gap-4 flex-col">
+                <p class="tracking-widest justify-between">{% now "l, F j, Y g:i A" %}</p>
+                <h2 class="tracking-wider text-2xl" >Welcome {{employee.firstname}}</h2>
+            </div>
+
+        <div>
+            <img src="{% static 'images/boost.png' %}" class="w-96 " alt="Logo" />
+        </div>
+
+
+        <div class="mt-16">
+            <div class="cards  grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 items-center justify-center gap-6">
+
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-briefcase"></i>
+                    <a href="{% url 'sales' %}">
+                        Sales
+                    </a>
+                    
+                </div>
+
+                
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-chalkboard-user"></i>
+                    <a href="{% url 'learn-development' %}">
+                        L&D
+                    </a>
+                    
+                </div>
+
+                
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-paintbrush"></i>
+                    <a href="{% url 'designers' %}">
+
+                        Designers
+                    </a>
+                </div>
+
+
+                
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-gears"></i>
+                    <a href="{% url 'operations' %}">Operations</a>
+                    
+                </div>
+
+
+                
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-user-tie"></i>
+                    <a href="{% url 'trainers' %}">
+
+                        Professor
+                    </a>
+                    
+                </div>
+
+
+                
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-calendar-days"></i>
+                    <a href="{% url 'courses' %}">
+
+                        Calender
+                    </a>
+                </div>
+
+
+                
+                <div class="sales  w-24 h-24 hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-hand-holding-hand"></i>
+                    Care
+                </div>
+
+                
+                <div class="sales  w-24 h-24  hover:-translate-y-4 bg-slate-500/30 rounded-2xl text-white bg- hover:shadow-2xl transition-all duration-300 scale-100 backdrop-blur-sm hover:backdrop-blur-lg hover:scale-150 hover:z-50 flex flex-col gap-1 items-center justify-center  text-xl shadow-xl cursor-pointer">
+                    <i class="fa-solid fa-2x fa-list-check"></i>
+                    <a href="{% url 'tasks' %}">
+
+                        Tasks
+                    </a>
+                </div>
+                
+
+      
+
+
+            </div>
+            
+        </div>
+
+
+        
+
+    </section>
+</main>
+{% endblock content %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %} 
+
+{% load static %} 
+
+
+{% block content %}
+
+{% comment %}
+  
+{% include 'parts/navbar.html' %}
+{% endcomment %}
+<main class="w-full  h-[100vh] flex items-center justify-center relative flex-col">
+  <video
+    autoplay
+    loop
+    muted
+    class="absolute -z-10  top-0 left-0 h-[100vh] w-[100vw] bg-cover object-cover"
+  >
+    <source
+      src="{% static 'videos/boost-lab1.mp4' %}" 
+      type="video/mp4"
+    />
+  </video>
+  <section class="shadow-lg backdrop-blur-sm  px-60 relative -top-14  text-white p-12 rounded-lg flex justify-between items-center">
+
+    <form method="post" action="{% url 'login' %}" class="flex flex-col font-bold gap-6 items-center justify-center">
+      {% csrf_token %}
+        <div class="flex items-center gap-2">
+            Hi ,there
+            <i class="fa-solid fa-2x fa-rocket"></i>
+        </div>
+
+      <div class="" >
+
+        <input type="text" class="px-6 rounded-md group bg-transparent outline-none h-9" name="username" placeholder="username" />
+      </div>
+      <div>
+        <input type="password"  class="px-6 rounded-md bg-transparent outline-none h-9" name="password" placeholder="password"/>
+      </div>
+      <div class="flex justify-between gap-8 items-center ">
+          <div>
+              <input type="checkbox" name="" class="" id="">
+              <span class="text-xs">Remember me</span>
+          </div>
+        <div>
+
+            <a class="text-xs" href="/">forget password ?</a>
+        </div>
+      </div>
+      <div class="bg-slate-100 text-black px-4 py-1 transition-all duration-300 rounded-lg w-full hover:bg-[#232c2c] hover:text-white text-center">
+
+        <button>LOGIN</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+{% endblock content %}

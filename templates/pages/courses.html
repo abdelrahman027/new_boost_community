@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Courses
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+<section class="p-12 space1-bg h-full min-h-screen">
+    <div class="flex justify-between items-center">
+
+        <h2 class="text-3xl font-bold my-4 text-start ml-6  p-8 border-b-4 w-fit"> <i class="fa-solid fa-id-card-clip"></i> Courses </h2>
+
+        <div class="relative">
+            <input
+            class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
+            placeholder="Search course by name" id="nav_search"
+            />
+            <button
+            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
+            type="button"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            </button>
+        </div>
+
+    </div>
+    <div id="course__body">
+
+        
+    
+{% for course in all_courses %}
+    <div class="w-[650px] mx-auto border rounded-lg my-6 shadow-lg hover:shadow-2xl transition-all backdrop-blur-sm duration-300" >
+        <a href="{% url 'courses' %}{{course.course_id}}">
+        <div class="flex items-center justify-between">
+            <img src="{{course.Sales_man.employee_photo.url}}" alt="sales" class=" w-[200px]">
+            <div class="p-2 flex-1 text-center">
+                <div class="flex  items-center justify-between  -mt-6 mb-2">
+
+                    <div class="text-start bg-slate-500 w-fit px-2 py-1 text-xs rounded-full">
+                        <p class="">COURSE{{course.course_id}}</p>
+                    </div>
+
+                    <div class="w-fit px-2 py-1 bg-red-200 rounded-full text-xs">
+                        <h2 class="">{{course.course_type}}</h2>
+                    </div>
+                    <div class="w-fit px-2 py-1 bg-yellow-200 rounded-full text-xs">
+                        <h2 class="">{{course.status}}</h2>
+                    </div>
+
+                </div>
+                <div class="flex items-center justify-start pl-28 py-2 gap-2">
+                    <p>Course Name:</p>
+                    <h2>{{course.course_name|title}}</h2>
+                </div>
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h2>{{course.location}}</h2>
+                </div>
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-regular fa-clock"></i>
+                    <h2>{{course.course_duration}}</h2>
+                </div>
+                
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <h2>{{course.course_Date}}</h2>
+                </div>
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <h2>
+                        
+                        {% if course.facilitator %}
+                        {{course.facilitator}}
+                        {% else %}
+                        No facilitator
+                        {% endif %}
+                    </h2>
+                      
+                </div>
+            </div>
+         </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+</section>
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    const data = '{{course_json}}'
+    // console.log(data)
+    const rdata = JSON.parse(data.replace(/&quot;/g, '"'))
+    console.log(rdata); //DATA@@@
+
+    const local_search = document.getElementById('nav_search')
+    const course__body = document.getElementById('course__body')
+    let filteredArr = [];
+
+    local_search.addEventListener('keyup', (e) =>
+    {
+        course__body.innerHTML = ""
+        console.log(filteredArr);
+        filteredArr = rdata.filter((co) => (co['course_name']).includes(e.target.value.toUpperCase()))
+        if (filteredArr.length > 0) {
+            filteredArr.map((item) =>
+            {
+                course__body.innerHTML += `<div class="w-[650px] mx-auto border rounded-lg my-6 shadow-lg hover:shadow-2xl transition-all duration-300" id="course__body">
+        <a href="{% url 'courses' %}${item.course_id}">
+        <div class="flex items-center justify-between">
+            <img src="{% static '/images/boost_dark.png' %}" alt="sales" class=" w-[200px]">
+            <div class="p-2 flex-1 text-center">
+                <div class="flex  items-center justify-between  -mt-6 mb-2">
+
+                    <div class="text-start bg-slate-500 w-fit px-2 py-1 text-xs rounded-full">
+                        <p class="">COURSE${item.course_id}</p>
+                    </div>
+
+                    <div class="w-fit px-2 py-1 bg-red-200 rounded-full text-xs">
+                        <h2 class="">${item.course_type}</h2>
+                    </div>
+                    <div class="w-fit px-2 py-1 bg-yellow-200 rounded-full text-xs">
+                        <h2 class="">${item.status}</h2>
+                    </div>
+
+                </div>
+                <div class="flex items-center justify-start pl-28 py-2 gap-2">
+                    <p>Course Name:</p>
+                    <h2>${item.course_name}</h2>
+                </div>
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h2>${item.location}</h2>
+                </div>
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-regular fa-clock"></i>
+                    <h2>${item.course_duration}</h2>
+                </div>
+                
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <h2>${item.course_Date}</h2>
+                </div>
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <h2>
+                        
+                        {% if course.facilitator %}
+                        ${item.facilitator}
+                        {% else %}
+                        No facilitator
+                        {% endif %}
+                    </h2>
+                      
+                </div>
+            </div>
+         </div>
+        </a>
+    </div>`
+            })
+        }
+    })
+
+</script>
+  
+{% endblock script %}

@@ -1,0 +1,58 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% comment %} {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %} {% endcomment %}
+
+    <!-- <link rel="stylesheet" href="{% static 'boot/css/bootstrap.css' %}"> -->
+     <style>
+  
+
+     </style>
+    {% tailwind_css %}
+
+    <title>
+
+        {% block title %}
+        Boost Community
+        {% endblock title %}
+
+    </title>
+
+
+</head>
+
+
+<body class="" >
+
+        
+    {% if messages %}
+    <div class="messages z-50 bg-transparent text-xl">
+        {% for message in messages %}
+            <div class="alert p-2 alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}     
+
+    {% block content %}
+
+    {% endblock content %}
+
+    {% block script %}
+
+    {% endblock script %}
+</body>
+
+
+</html>

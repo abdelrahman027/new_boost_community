@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+ {% load static %}
+  {% block title %}
+   Sales 
+   {% endblock title %}
+    {% block content %}
+     {% include 'parts/navbar.html' %}
+<main class="sales-bg">
+  
+<section class="relative">
+  <h2 class="text-3xl font-bold mb-4 text-start ml-6  p-8 border-b-4 w-fit "> <i class="fa-solid  fa-briefcase"></i> Sales</h2>
+  <div class="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center items-center gap-0">
+    
+    {% for sales_man in sales_men  %}
+          <!-- CARD -->
+    <div
+    class="shadow-xl mx-auto min-h-[350px] backdrop-blur  border-black p-12 rounded-3xl relative overflow-hidden group w-[300px]"
+    >
+    <div
+      class=" absolute top-0 left-0 bg-white opacity-0 group-hover:opacity-100 trans px-6 w-full h-full transition-all duration-500 text-black flex items-center flex-col justify-center"
+    >
+      <div
+        class=" flex items-center text-center  justify-center  gap-4  pb-6 border-black"
+      >
+        <div class="text-center p-2 bg-slate-600 rounded-lg text-white shadow-lg w-20 h-20 hover:scale-110 transition-all duration-300">
+            <p class="text-xl font-semibold">{{sales_man.clients.count}}</p>
+            <p class="text-xs">All <br> Clients</p>
+        </div>
+        <div class="text-center p-2 bg-slate-600  rounded-lg text-white shadow-lg w-20 h-20 hover:scale-110 transition-all duration-300">
+            <p class="text-xl font-semibold">{{sales_man.active_client_count}}</p>
+            <p class="text-xs">Active Clients</p>
+        </div>
+        <div class="text-center p-2 bg-slate-600 rounded-lg text-white shadow-lg w-20 h-20 hover:scale-110 transition-all duration-300">
+            <p class="text-xl font-semibold">{{sales_man.running_courses_count}}</p>
+            <p class="text-xs">Running courses</p>
+        </div>
+
+      </div>
+
+      <div class="flex items-center justify-between gap-6 mt-4 text-center">
+        <div>
+            <i class="fa-solid fa-2x fa-envelope text-slate-600"></i>
+            <h3 class="mt-2">{{sales_man.email}}</h3>
+        </div>
+        <div>
+            <i class="fa-solid fa-2x fa-phone text-slate-600"></i>
+            <h3 class="mt-2">{{sales_man.phone}}</h3>
+        </div>
+      </div>
+      <div class="flex items-center justify-between gap-6">
+        <button
+        class="mt-8 px-5 py-3 rounded-lg border hover:text-white hover:bg-slate-600 transition-all duration-300"
+      >
+        <a class="" target="_blank" href="/clients?sales_id={{sales_man.employee_id}}">Clients</a>
+      </button>
+      <button
+      class="mt-8 px-5 py-3 rounded-lg border hover:text-white hover:bg-slate-600 transition-all duration-300"
+    >
+      <a class="" target="_blank" href="/public-courses?sales_id={{sales_man.employee_id}}">Public</a>
+    </button>
+      </div>
+
+    </div>
+    
+    <div class="flex gap-6 items-center">
+
+      <img
+        src="{{sales_man.employee_photo.url}}"
+        alt="essex"
+        class="w-[200px] rounded-full shadow-2xl"
+      />
+    
+    </div>
+    <div class="flex flex-col flex-wrap mt-12">
+      <p class="text-sm">Our Hero</p>
+      <h2 class="text-xl font-bold py-1">{{sales_man.firstname}} {{sales_man.lastname}}</h2>
+      <h3>{{sales_man.location}}</h3>
+
+    </div>
+    </div>
+    <!-- END CARD -->
+    {% endfor %}
+
+  </div>
+</section>
+</main>
+
+{% endblock content %}

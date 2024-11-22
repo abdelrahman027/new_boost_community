@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Trainers
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+<section class="client-bg  min-h-screen p-12">
+    <div class="flex justify-between items-center">
+
+        <h2 class="text-3xl font-bold my-4 text-start ml-6  p-8 border-b-4 w-fit"> <i class="fa-solid fa-id-card-clip"></i> Trainers </h2>
+
+        <div class="relative">
+            <input
+            class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
+            placeholder="Search trainer by name" id="nav_search"
+            />
+            <button
+            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
+            type="button"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            </button>
+        </div>
+
+    </div>
+    <div id="trainer__body">
+
+        
+    
+{% for trainer in trainers %}
+    <div class="w-[650px] mx-auto border rounded-lg my-6 shadow-lg hover:shadow-2xl backdrop-blur transition-all duration-300" >
+        <a href="{% url 'trainers' %}{{trainer.trainer_id}}">
+        <div class="flex items-center justify-between">
+            <img src="{{trainer.trainer_photo.url}}" alt="sales" class=" w-[200px]">
+            <div class="p-2 flex-1 text-center">
+                <div class="flex  items-center justify-between  -mt-6 mb-2">
+
+                    <div class="text-start bg-slate-500 w-fit px-2 py-1 text-xs rounded-full">
+                        <p class="">TRAINER{{trainer.trainer_id}}</p>
+                    </div>
+
+                    <div class="w-fit px-2 py-1 bg-red-200 rounded-full text-xs">
+                        <h2 class="">{{trainer.field_of_experties}}</h2>
+                    </div>
+                    <div class="w-fit px-2 py-1 bg-yellow-200 rounded-full text-xs">
+                        <h2 class="">${{trainer.average_rate}}</h2>
+                    </div>
+
+                </div>
+                <div class="flex items-center justify-start pl-28 py-2 gap-2">
+                    <p>Trainer Name:</p>
+                    <h2>{{trainer.name|title}}</h2>
+                </div>
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-globe"></i>
+                    <h2>{{trainer.nationality|title}}</h2>
+                </div>
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h2>{{trainer.residence_location|title}}</h2>
+                </div>
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-phone"></i>
+                    <h2>{{trainer.phone}}</h2>
+                </div>
+                
+
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+
+                    <h2>
+                        <i class="fa-solid fa-envelope"></i> 
+                        {{trainer.email}}
+                    </h2>
+                      
+                </div>
+            </div>
+         </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+</section>
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    const data = '{{trainers_json}}'
+    // console.log(data)
+    const rdata = JSON.parse(data.replace(/&quot;/g, '"'))
+    console.log(rdata); //DATA@@@
+
+    const local_search = document.getElementById('nav_search')
+    const trainer__body = document.getElementById('trainer__body')
+    console.log(trainer__body)
+    let filteredArr = [];
+
+    local_search.addEventListener('keyup', (e) =>
+    {
+        trainer__body.innerHTML = ""
+        console.log(filteredArr);
+        filteredArr = rdata.filter((co) => (co['name']).includes(e.target.value.toUpperCase()))
+        if (filteredArr.length > 0) {
+            filteredArr.map((item) =>
+            {
+                trainer__body.innerHTML += `    <div class="w-[650px] mx-auto border rounded-lg my-6 shadow-lg hover:shadow-2xl backdrop-blur transition-all duration-300" >
+        <a href="/trainers/${item.trainer_id}">
+        <div class="flex items-center justify-between">
+            <img src="{% static 'images/avatar3.png' %}" alt="sales" class=" w-[200px]">
+            <div class="p-2 flex-1 text-center">
+                <div class="flex  items-center justify-between  -mt-6 mb-2">
+
+                    <div class="text-start bg-slate-500 w-fit px-2 py-1 text-xs rounded-full">
+                        <p class="">TRAINER${item.trainer_id}</p>
+                    </div>
+
+                    <div class="w-fit px-2 py-1 bg-red-200 rounded-full text-xs">
+                        <h2 class="">${item.field_of_experties}</h2>
+                    </div>
+                    <div class="w-fit px-2 py-1 bg-yellow-200 rounded-full text-xs">
+                        <h2 class="">$${item.average_rate}</h2>
+                    </div>
+
+                </div>
+                <div class="flex items-center justify-start pl-28 py-2 gap-2">
+                    <p>Trainer Name:</p>
+                    <h2>${item.name}</h2>
+                </div>
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-globe"></i>
+                    <h2>${item.nationality}</h2>
+                </div>
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h2>${item.residence_location}</h2>
+                </div>
+                <div class="flex items-center justify-start pl-28 gap-2">
+                    <i class="fa-solid fa-phone"></i>
+                    <h2>${item.phone}</h2>
+                </div>
+                
+
+
+                <div class="flex items-center justify-start pl-28 gap-2">
+
+                    <h2>
+                        <i class="fa-solid fa-envelope"></i> 
+                        ${item.email}
+                    </h2>
+                      
+                </div>
+            </div>
+         </div>
+        </a>
+    </div>`
+            })
+        }
+    })
+
+</script>
+  
+{% endblock script %}

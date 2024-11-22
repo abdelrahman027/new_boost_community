@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Trainer
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+<section class="px-12 mb-12">
+    <div class="flex items-center justify-center gap-6 ">
+        <h1 class="my-12 text-2xl font-semibold tracking-wider text-center border-b-2 pb-2">
+            <span class="text-xs">DR</span> {{selected_trainer.name}} </h1>
+
+
+        <h2>Nationality : {{selected_trainer.nationality}} </h2>
+    </div>
+    <div class="course-info flex items-center justify-center">
+
+        <div class="flex items-center justify-center gap-6">
+
+
+            <div class="flex items-center  rounded-lg justify-center gap-6 border overflow-hidden">
+                <div>
+                    <img src="{{selected_trainer.trainer_photo.url}}" alt="boost" class="rounded-l-lg">
+                </div>
+                <div class="p-4">
+                    <h2 class="text-xl">Name : {{selected_trainer.name}}</h2>
+                    <p class="">Field : {{selected_trainer.field_of_experties}}</p>
+                    <p class="">Location : {{selected_trainer.residence_location}}</p>
+                    <a class="hover:underline" href="{{selected_trainer.linkedin}}">LinkedIn</a>
+                    <p class="">Email : {{selected_trainer.email}}</p>
+                    {% if selected_trainer.cv %}
+                    <button class="btn-primary"><a  href="{{selected_trainer.cv.url}}">Show CV</p>
+                    {% else %}
+                    <button class="">No CV</p>
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between">
+
+
+    </div>
+
+    <div class="course flex-1 pl-12">
+
+        <div
+            class="grid grid-cols-1 md:grid-cols-3 items-center justify-center place-content-center place-items-center lg:grid-cols-4 gap-4 mt-12 mx-auto">
+
+            <div
+                class="card w-[250px] h-[250px] shadow-lg flex transition-all duration-300 items-center flex-col justify-center relative rounded-lg hover:shadow-2xl">
+                <div class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+                    id="rfp-dropdown">
+                    <form action="" class="p-2 relative ">
+                        <div onclick=hide_box3() class="absolute  top-0 right-2 cursor-pointer"><i
+                                class="fa-solid fa-xmark"></i></div>
+
+                        <div class="p-2">
+
+                            <input type="file" name="" id="">
+                        </div>
+                        <button class="btn-primary">Upload</button>
+                    </form>
+                </div>
+                <h2 class="text-xl font-semibold"><i class="fa-solid fa-comment-dots"></i> Passport Scan</h2>
+                <!-- <div class="absolute top-4 left-4 -z-10 bg-yellow-200 py-2 px-4 rounded-lg">
+                    {{selected_course.maerial_status}}</div> -->
+
+                <div class="flex items-center justify-center gap-4">
+                    <button onclick="show_box3()" class="btn-primary">
+                        Edit
+                    </button>
+                    {% if selected_trainer.passport_scan %}
+                      
+                    <button class="btn-primary">
+                        <a href="{{selected_trainer.passport_scan.url}}">View</a>
+                    </button>
+                    {% endif %}
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+    </div>
+
+
+
+</section>
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script>
+    const propsal_box = document.getElementById('Proposal-dropdown')
+    const invoice_box = document.getElementById('invoice-dropdown')
+    const rfp_box = document.getElementById('rfp-dropdown')
+    const feedback_box = document.getElementById("feedback-dropdown")
+    const gift_box = document.getElementById("gift-dropdown")
+    const prepost_box = document.getElementById("prepost-dropdown")
+
+
+    const hide_box6 = () => {
+        prepost_box.classList.add('hidden')
+    }
+    const show_box6 = () => {
+        prepost_box.classList.remove('hidden')
+    }
+
+    const hide_box5 = () => {
+        gift_box.classList.add('hidden')
+    }
+    const show_box5 = () => {
+        gift_box.classList.remove('hidden')
+    }
+
+    const hide_box4 = () => {
+        feedback_box.classList.add('hidden')
+    }
+    const show_box4 = () => {
+        feedback_box.classList.remove('hidden')
+    }
+
+
+    const hide_box3 = () => {
+        rfp_box.classList.add('hidden')
+    }
+    const show_box3 = () => {
+        rfp_box.classList.remove('hidden')
+    }
+
+    const hide_box2 = () => {
+        invoice_box.classList.add('hidden')
+    }
+    const show_box2 = () => {
+        invoice_box.classList.remove('hidden')
+    }
+
+
+    const hide_box = () => {
+        propsal_box.classList.add('hidden')
+    }
+    const show_box = () => {
+        propsal_box.classList.remove('hidden')
+    }
+</script>
+{% endblock script %}

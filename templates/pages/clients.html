@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Clients
+{% endblock title %}
+
+{% block content %}
+
+{% include 'parts/navbar.html' %}
+<section class="client-bg  min-h-screen">
+    <h2 class="text-3xl font-bold mb-4 text-start ml-6  p-8 border-b-4 w-fit"> <i class="fa-solid fa-id-card-clip"></i> Clients </h2>
+
+
+    <div class="flex items-start justify-center flex-wrap  gap-12 border-b-2 pb-12 w-fit mx-auto">
+
+        
+        {% for sales_man in all_sales  %}
+
+        <a href="/clients?sales_id={{sales_man.employee_id}}" class='flex group {{active_employee.id}} items-center justify-center flex-col sales_anchor'>
+            <img src="{{sales_man.employee_photo.url}}" alt="employee" class="w-24 rounded-full shadow-lg group-hover:scale-110 transition-all duration-300 {% if sales_man.employee_id|slugify == sales_id|slugify %} scale-150 shadow-2xl {% endif %} ">
+            <h3 class="group-hover:font-bold transition-all duration-300">{{sales_man.firstname}}</h3>
+        </a>
+        {% endfor %}
+        <h3 class="text-2xl font-bold my-4 text-start ml-6  p-8 w-fit">{{active_employee.firstname}} Clients</h3>
+    </div>
+    <div class="flex justify-center items-center gap-6 mt-24 pb-24 flex-wrap">
+        {% if sales_id is None %}
+        {% for client in all_clients  %}
+        <div class="border rounded-lg backdrop-blur-md relative group hover:shadow-2xl transition-all duration-300 shadow-lg" style="width: 18rem; height: 25rem;">
+            <img src="{{client.client_logo.url}}" style="width: 100%;height: 200px; object-fit: cover;" class="" alt="...">
+            <div class="p-4">
+              <h5 class="card-title font-semibold">{{client.client_name}}</h5>
+              <p class="card-text py-2">Sales: {{client.sales_person.firstname}} {{client.sales_person.lastname}}</p>
+              <p>Registred At : {{client.registred_date|date:"d M, Y" }}</p>
+              <p class="card-text mb-4">Mainly located at : {{client.location}}</p>
+
+            </div>
+            <div class="absolute top-0 left-0 w-full h-full bg-white flex items-center flex-col justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 gap-2">
+                {% if client.status %}
+                <h4 class="flex items-center gap-4"> <span>Acive</span> <i class="fa-solid fa-2x fa-clipboard-check text-green-600"></i></h4>
+                {% else %}
+                <h4 class="flex items-center gap-4"> <span>Inactive</span> <i class="fa-solid fa-2x fa-rectangle-xmark text-red-600"></i></h4>
+                {% endif %}
+
+                <h3 class="p-4 txt-2xl font-bold">{{client.client_name}}</h3>
+                <button class="btn_primary" >
+                    <a href="{% url 'clients' %}{{client.client_id}}" class="btn btn-primary mt-6">Visit Page</a>
+                </button>
+            </div>
+          </div>
+
+        {% endfor %}
+        {% else %}
+        
+        
+        {% if  sales_clients.count == 0 %}
+          <h2 class="">There is no clients for this employee</h2>
+        {% else%}
+
+        {% for client in sales_clients  %}
+        <div class="border rounded-lg relative group hover:shadow-2xl transition-all duration-300 shadow-lg" style="width: 18rem; height: 25rem;">
+            <img src="{{client.client_logo.url}}" style="width: 100%;height: 200px; object-fit: cover;" class="" alt="...">
+            <div class="p-4">
+              <h5 class="card-title font-semibold">{{client.client_name}}</h5>
+              <p class="card-text py-2">Sales: {{client.sales_person.firstname}} {{client.sales_person.lastname}}</p>
+              <p>Registred At : {{client.registred_date|date:"d M, Y" }}</p>
+              <p class="card-text mb-4">Mainly located at : {{client.location}}</p>
+
+            </div>
+            <div class="absolute top-0 left-0 w-full h-full bg-white flex items-center flex-col justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 gap-2">
+                {% if client.status %}
+                <h4 class="flex items-center gap-4"> <span>Acive</span> <i class="fa-solid fa-2x fa-clipboard-check text-green-600"></i></h4>
+                {% else %}
+                <h4 class="flex items-center gap-4"> <span>Inactive</span> <i class="fa-solid fa-2x fa-rectangle-xmark text-red-600"></i></h4>
+                {% endif %}
+
+                <h3 class="p-4 txt-2xl font-bold">{{client.client_name}}</h3>
+                <button class="btn_primary" >
+                    <a href="{% url 'clients' %}{{client.client_id}}" class="btn btn-primary mt-6">Visit Page</a>
+                </button>
+            </div>
+          </div>
+
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+
+    </div>
+</section>
+
+
+{% endblock content %}
+
+{% block script %}
+  <script>
+    // anchorTag=document.querySelectorAll(".sales_anchor")
+    // console.log(anchorTag)
+    //     if ("{{request.GET.sales_id}}" == "{{active_employee}}" )
+    //     {
+    //         anchorTag[1].style.color ="white"
+    //     }
+  </script>
+{% endblock script %}

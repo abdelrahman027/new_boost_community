@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Tasks
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+
+<section class="px-12 relative">
+     {% comment %}
+     Title
+    {% endcomment %}
+    <div class="flex items-center justify-center gap-6 ">
+        <h1 class="my-12 text-2xl font-semibold tracking-wider text-center border-b-2 pb-2">
+            <span class="text-xs">Employee</span> {{employee.firstname}} {{employee.lastname}} </h1>
+
+
+        <h2>Department : {{employee.department.department_name}} </h2>
+    </div>
+     {% comment %}
+       Employee Card
+     {% endcomment %}
+
+    <div class="course-info border-b-2 pb-6 w-3/4 mx-auto flex items-center justify-center">
+
+        <div class="flex items-center justify-center gap-6">
+
+
+            <div class="flex items-center  rounded-lg justify-center gap-6 border overflow-hidden">
+                <div>
+                    <img src="{{employee.employee_photo.url}}"  alt="boost" class="rounded-l-lg w-[200px]">
+                </div>
+                <div class="p-4">
+                    <h2 class="text-xl">Name : {{employee.firstname}} {{employee.lastname}}</h2>
+                    <p class="">department : {{employee.department.department_name}}</p>
+                    <p class="">Location : {{employee.location}}</p>
+                    <p class="">Email : {{employee.email}}</p>
+                    <p class="">points : {{employee.points}}</p>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    {% comment %}
+      Tickets
+    {% endcomment %}
+    <div class="pt-12 flex items-center justify-center gap-3">
+        <div class="total flex item-center justify-center p-12 flex-col text-center rounded-lg bg-indigo-200">
+            <div>{{employee_tasks.count}}</div>
+            <h3>Total Tickets</h3>
+        </div>
+        <div class="inprogress flex item-center justify-center p-12 flex-col text-center rounded-lg bg-amber-200">
+            <div>{{employee_inprogress.count}}</div>
+            <h3>Inprogress Tickets</h3>
+
+        </div>
+        <div class="stuck flex item-center justify-center p-12 flex-col text-center rounded-lg bg-cyan-200">
+            <div>{{employee_stuck.count}}</div>
+            <h3>Stuck Tickets</h3>
+        </div>
+        <div class="missed flex item-center justify-center p-12 flex-col text-center rounded-lg bg-red-200">
+            <div>{{employee_missed.count}}</div>
+            <h3>Missed Tickets</h3>
+        </div>
+        <div class="done flex item-center justify-center p-12 flex-col text-center rounded-lg bg-green-200">
+            <div>{{employee_done.count}}</div>
+            <h3>Done Tickets</h3>
+        </div>
+    </div>
+
+    {% comment %}
+      Add Tickets
+    {% endcomment %}
+
+    <div class="pt-12 mb-12">
+       <div class="shadow-lg rounded-lg p-6 flex items-center justify-between">
+        <div class="relative">
+            <input
+            class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
+            placeholder="Search trainer by name" id="nav_search"
+            />
+            <button
+            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
+            type="button"
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+            </button>
+        </div>
+         
+        <button class="btn-primary mt-0" onclick="show_modal()">
+            Add Tickets
+        </button>
+
+       </div>
+
+       {% comment %}
+         Table
+       {% endcomment %}
+
+        <div class="mt-12 shadow-lg  " >
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">Task Name</th>
+                        <th scope="col" class="py-3 px-6">Status</th>
+                        <th scope="col" class="py-3 px-6">Assigned by</th>
+                        <th scope="col" class="py-3 px-6">DeadLine</th>
+                        <th scope="col" class="py-3 px-6">Points</th>
+                        <th scope="col" class="py-3 px-6">Actions</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in employee_tasks  %}
+                          
+                        
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="py-4 px-6">
+                            <div>{{task.task_name}}</div>
+                            <p class="truncate text-xs !text-gray-400">{{task.description}}</p>
+                        </td>
+                        <td class="py-4 px-6">{{task.status}}</td>
+                        <td class="py-4 px-6">{{task.manager.employee.firstname}}</td>
+                        <td class="py-4 px-6">{{task.deadline}}</td>
+                        <td class="py-4 px-6 ">{{task.points}}</td>
+                        <td class="py-4 px-6">
+                            <button class="pr-6"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button><i class="fa-solid fa-trash-can"></i></button>
+
+                        </td>
+                    
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+        </div>
+        
+    </div>
+    </div>
+
+    {% comment %}
+      Modal
+    {% endcomment %}
+
+<div
+id="add_task_modal"
+  data-dialog-backdrop="sign-in-modal"
+  data-dialog-backdrop-close="true"
+  class="inset-0 z-[999] grid h-full  w-full place-items-center bg-black bg-opacity-60 backdrop-blur-sm transition-all duration-300 absolute top-0 left-0"
+>
+<div class="absolute  left-0 top-0 w-full h-full" onclick="hide_modal()">
+
+</div>
+
+  <div
+    data-dialog="sign-in-modal"
+    class="relative mx-auto w-full max-w-[24rem] rounded-lg overflow-hidden shadow-sm"
+  >
+    <div class="relative flex flex-col bg-white">
+      <div class="relative m-2 items-center flex justify-center text-white h-24 rounded-md bg-slate-800">
+        <h3 class="text-2xl">
+         Add Task
+        </h3>
+      </div>
+    <form action="" class="p-4" method="POST">
+        {% csrf_token %}
+
+
+ 
+          
+        <div class="flex flex-col gap-4 p-6">
+          <div class="w-full max-w-sm min-w-[200px]">
+              <label class="block mb-2 text-sm text-slate-600">
+                Task Name
+              </label>
+              <input type="text" name="task_name" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="task name" value={{selected_task.task_name}} />
+          </div>
+          
+          <div class="w-full max-w-sm min-w-[200px]">
+            <label class="block mb-2 text-sm text-slate-600">
+              Description
+            </label>
+            <input type="text" name="description" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none  focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="description" value="{{selected_task.description}}" />
+          </div>
+  
+  
+          <div class="w-full max-w-sm min-w-[200px]">
+              <label class="block mb-2 text-sm text-slate-600">
+                Status
+              </label>
+              <select name="task_status" value={{selected_task.status}} id="task_status" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow">
+                <option value="Done">Done</option>
+                <option value="Stuck">Stuck</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Missed">Missed</option>
+              </select>
+            </div>
+  
+            <div class="w-full max-w-sm min-w-[200px]">
+              <label class="block mb-2 text-sm text-slate-600">
+                DeadLine
+              </label>
+              <input type="date" value="{{selected_task.deadline|date:'Y-m-d'}}" name="deadline" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="deadline" />
+            </div>
+      
+  
+        </div>
+        
+
+        {% comment %} {{ form.as_div }} {% endcomment %}
+
+      <div class="p-6 pt-2">
+        <button type="submit" class="w-full rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+          ADD
+        </button>
+
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+</section>
+
+
+{% endblock content %}
+
+
+{% block script %}
+  <script>
+    {% comment %} const modal_div= document.getElementById("add_task_modal")
+ const show_modal = ()=>{
+    modal_div.classList.add("w-full")
+    modal_div.classList.remove("w-0")
+ }
+
+ const hide_modal = ()=>{
+    modal_div.classList.add("w-0")
+    modal_div.classList.remove("w-full")
+ } {% endcomment %}
+
+  </script>
+{% endblock script %}

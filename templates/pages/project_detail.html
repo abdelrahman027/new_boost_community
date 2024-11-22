@@ -1,0 +1,434 @@
+{% extends 'base.html' %}
+ {% load static %}
+  {% block title %}
+   Projects
+    
+{% endblock title %}
+ {% block content %} 
+ {% include 'parts/navbar.html' %}
+
+<form method="POST" class="px-12 space2-bg min-h-screen">
+  {% csrf_token %}
+
+  <div class="max-w-full mx-auto pt-12">
+    <div
+      class="w-full flex justify-between no-scrollbar items-center scrollbar-hide mb-3 mt-1 pl-3"
+    >
+      <div>
+        <h3 class="text-lg font-semibold text-slate-800">
+          {{selected_project.project_name}}
+        </h3>
+        <p class="text-slate-500">
+          Number of Courses : {{selected_project.course_set.count}}
+        </p>
+      </div>
+      <div class="ml-3">
+        <div class="w-full max-w-sm no-scrollbar min-w-[200px] relative">
+          <div class="relative">
+            <input
+              class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
+              id="nav_search"
+              placeholder="Search for course..."
+            />
+            <button
+              class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded"
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="currentColor"
+                class="w-8 h-8 text-slate-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border"
+    >
+      <table class="w-full text-left table-auto min-w-max">
+        <thead>
+          <tr>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Course ID
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Name
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Duration
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Location
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Date
+              </p>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="course__body">
+          {% for course in selected_project.course_set.all %}
+
+          <tr class="hover:bg-slate-50 border-b border-slate-200">
+            <td class="p-4 py-5">
+              <p
+                class="block font-semibold text-sm text-slate-800 hover:underline"
+              >
+                <a href="/">COURSE{{course.course_id}}</a>
+              </p>
+            </td>
+
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="/">{{course.course_name}}</a>
+              </p>
+            </td>
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="/">{{course.course_duration}} Days</a>
+              </p>
+            </td>
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="/">{{course.location}}</a>
+              </p>
+            </td>
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="">{{course.course_Date|date:"D d M Y"}}</a>
+              </p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% comment %}
+
+      <div class="flex justify-between items-center px-4 py-3">
+        <div class="text-sm text-slate-500">Showing <b>1-5</b> of 45</div>
+        <div class="flex space-x-1">
+          <button
+            class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+          >
+            Prev
+          </button>
+          <button
+            class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-white bg-slate-800 border border-slate-800 rounded hover:bg-slate-600 hover:border-slate-600 transition duration-200 ease"
+          >
+            1
+          </button>
+          <button
+            class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+          >
+            2
+          </button>
+          <button
+            class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+          >
+            3
+          </button>
+          <button
+            class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      {% endcomment %}
+    </div>
+  </div>
+
+  <div
+    class="grid grid-cols-1 md:grid-cols-3 items-center justify-center place-content-center place-items-center lg:grid-cols-3 mt-12 mx-auto"
+  >
+    <div
+      class="card backdrop-blur w-[250px] h-[250px] shadow-lg flex transition-all duration-300 items-center flex-col justify-center relative rounded-lg hover:shadow-2xl"
+    >
+      <div
+        class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+        id="rfp-dropdown"
+      >
+        <div class="p-2 relative">
+          <div
+            onclick="hide_box3()"
+            class="absolute top-0 right-2 cursor-pointer"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+
+          <div class="p-2">
+            <input
+              type="file"
+              name="rfp_document"
+              value="{{selected_project.rfp_document}}"
+              id=""
+            />
+          </div>
+        </div>
+      </div>
+      <h2 class="text-xl font-semibold">
+        <i class="fa-solid fa-comment-dots"></i> Request for Proposal
+      </h2>
+
+      <button type="button" onclick="show_box3()" class="btn-primary">
+        Edit
+      </button>
+      {% if selected_projcet.rfp_document %}
+
+      <button class="pt-2 hover:underline">
+        <a class="text-green-500" href="{{selected_projcet.rfp_document.url}}"
+          >Show RFP</a
+        >
+      </button>
+      {% else %}
+      <p class="pt-2 text-red-300">No files Uploaded</p>
+      {% endif %}
+    </div>
+
+    <div
+      class="card backdrop-blur w-[250px] h-[250px] shadow-lg flex transition-all duration-300 items-center flex-col justify-center relative rounded-lg hover:shadow-2xl"
+    >
+      <h2 class="text-xl font-semibold">
+        <i class="fa-solid fa-envelope-open-text"></i> Proposal
+      </h2>
+      <div
+        class="absolute top-4 left-4 -z-10 bg-yellow-200 p-2 text-xs rounded-full"
+      >
+        {{selected_project.proposal_status}}
+      </div>
+
+      <div
+        class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+        id="Proposal-dropdown"
+      >
+        <div class="p-2 relative">
+          <div
+            onclick="hide_box()"
+            class="absolute top-0 right-2 cursor-pointer"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+          Status :
+          <select name="proposal_status" id="" class="rounded-lg">
+            {% if selected_project.proposal_status == 'Accepted' %}
+            <option value="Accepted" selected>Accepted</option>
+            {% else %}
+            <option value="Accepted">Accepted</option>
+            {% endif %} {% if selected_project.proposal_status == 'Issued' %}
+            <option value="Issued" selected>Issued</option>
+            {% else %}
+            <option value="Issued">Issued</option>
+            {% endif %} 
+            {% if selected_project.proposal_status == 'Paid' %}
+            <option value="Paid" selected>Paid</option>
+            {% else %}
+            <option value="Paid">Paid</option>
+            {% endif %} 
+
+
+            {% if selected_project.proposal_status == 'Waiting papers' %}
+            <option value="Waiting papers" selected>Waiting papers<option>
+            {% else %}
+            <option value="Waiting papers" >Waiting papers<option>
+            {% endif %} 
+
+           
+          </select>
+          <div class="p-2">
+            <input
+              type="file"
+              name="proposal_document"
+              value="{{selected_project.proposal_document}}"
+              id=""
+            />
+          </div>
+        </div>
+      </div>
+      <button type="button" onclick="show_box()" class="btn-primary">
+        Edit
+      </button>
+      {% if selected_projcet.proposal_document %}
+
+      <button class="pt-2 hover:underline">
+        <a
+          class="text-green-500"
+          href="{{selected_projcet.proposal_document.url}}"
+          >Show Proposal</a
+        >
+      </button>
+      {% else %}
+      <p class="pt-2 text-red-300">No files Uploaded</p>
+      {% endif %}
+    </div>
+
+    <div
+      class="card backdrop-blur w-[250px] h-[250px] shadow-lg flex transition-all duration-300 items-center flex-col justify-center relative rounded-lg hover:shadow-2xl"
+    >
+      <h2 class="text-xl font-semibold">
+        <i class="fa-solid fa-file-invoice-dollar"></i> Invoice
+      </h2>
+      <div
+        class="absolute top-4 left-4 -z-10 bg-green-200 p-2 text-xs rounded-full"
+      >
+        {{selected_project.invoice_status}}
+      </div>
+      <div
+        class="absolute transition-all duration-300 shadow-lg top-0 left-0 w-fit h-fit py-4 rounded-lg bg-white z-30 hidden"
+        id="invoice-dropdown"
+      >
+        <div class="p-2 relative">
+          <div
+            onclick="hide_box2()"
+            class="absolute top-0 right-2 cursor-pointer"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+          Status :
+          <select name="invoice_status" id="" class="rounded-lg">
+
+            {% if selected_project.proposal_status == 'Accepted' %}
+            <option value="Accepted" selected>Accepted</option>
+            {% else %}
+            <option value="Accepted">Accepted</option>
+            {% endif %}
+
+            {% if selected_project.proposal_status == 'Issued' %}
+            <option value="Issued" selected>Issued</option>
+            {% else %}
+            <option value="Issued">Issued</option>
+            {% endif %}
+
+            {% if selected_project.proposal_status == 'Paid' %}
+            <option value="Paid" selected>Paid</option>
+            {% else %}
+            <option value="Paid">Paid</option>
+            {% endif %}
+
+            {% if selected_project.proposal_status == 'Waiting papers' %}
+            <option value="Waiting papers" selected>Waiting papers</option>
+            {% else %}
+            <option value="Waiting papers">Waiting papers</option>
+            {% endif %}
+
+          </select>
+          <div class="p-2">
+            <input
+              type="file"
+              value="{{selected_project.invoice_document}}"
+              name="invoice_document"
+              id=""
+            />
+          </div>
+        </div>
+      </div>
+      <button type="button" onclick="show_box2()" class="btn-primary">
+        Edit
+      </button>
+      {% if selected_projcet.invoice_document %}
+
+      <button class="pt-2 hover:underline">
+        <a
+          class="text-green-500"
+          href="{{selected_projcet.invoice_document.url}}"
+          >Show Proposal</a
+        >
+      </button>
+      {% else %}
+      <p class="pt-2 text-red-300">No files Uploaded</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="text-center mx-auto pt-6 w-full">
+    <button class="btn-primary w-1/4 backdrop-blur">Update</button>
+  </div>
+</form>
+{% endblock content %} {% block script %}
+<script>
+  const data = "{{projects_courses_json}}";
+  // console.log(data)
+  const rdata = JSON.parse(data.replace(/&quot;/g, '"'));
+  console.log(rdata); //DATA@@@
+
+  const local_search = document.getElementById("nav_search");
+  const course__body = document.getElementById("course__body");
+  let filteredArr = [];
+
+  local_search.addEventListener("keyup", (e) => {
+    course__body.innerHTML = "";
+    console.log(filteredArr);
+    filteredArr = rdata.filter((co) =>
+      co["course_name"].includes(e.target.value.toUpperCase())
+    );
+    if (filteredArr.length > 0) {
+      filteredArr.map((course) => {
+        course__body.innerHTML += `               <tr class="hover:bg-slate-50 border-b border-slate-200">
+                   <td class="p-4 py-5">
+               <p class="block font-semibold text-sm text-slate-800 hover:underline"><a href="/">COURSE${course.course_id}</a></p>
+                    </td>
+    
+               <td class="p-4 py-5">
+               <p class="text-sm text-slate-500 hover:underline"><a href="/">${course.course_name}</a></p>
+               </td>
+               <td class="p-4 py-5">
+               <p class="text-sm text-slate-500 hover:underline"><a href="/">${course.course_duration} Days</a></p>
+               </td>
+               <td class="p-4 py-5">
+               <p class="text-sm text-slate-500 hover:underline"><a href="/">${course.location}</a></p>
+               </td>
+               <td class="p-4 py-5">
+               <p class="text-sm text-slate-500 hover:underline"><a href="">${course.course_Date}</a></p>
+               </td>
+                </tr>`;
+      });
+    }
+  });
+
+  ////////////////////////////////////////////////////////////////
+  const propsal_box = document.getElementById("Proposal-dropdown");
+  const invoice_box = document.getElementById("invoice-dropdown");
+  const rfp_box = document.getElementById("rfp-dropdown");
+
+  const hide_box3 = () => {
+    rfp_box.classList.add("hidden");
+  };
+  const show_box3 = () => {
+    rfp_box.classList.remove("hidden");
+  };
+
+  const hide_box2 = () => {
+    invoice_box.classList.add("hidden");
+  };
+  const show_box2 = () => {
+    invoice_box.classList.remove("hidden");
+  };
+
+  const hide_box = () => {
+    propsal_box.classList.add("hidden");
+  };
+  const show_box = () => {
+    propsal_box.classList.remove("hidden");
+  };
+</script>
+{% endblock script %}

@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .btn-primary {
+      @apply mt-8 px-5 py-3 rounded-lg border-2 hover:text-white hover:bg-slate-600 transition-all duration-300 ;
+    }
+    .active_sales_img {
+        @apply group-hover:scale-110 transition-all duration-300;
+    }
+  }
+
+  .alert-error {
+    background-color: red;
+  }
+
+  .alert-success {
+    background-color: green;
+  }
+
+
+html {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.main-bg {
+  background-image: url('../../../static/images/bg-2.jpg');
+  background-size: cover;
+}
+
+.sales-bg {
+  /* height: 100vh; */
+  
+  
+  background-image: url('../../../static/images/sales-bg.jpg');
+  background-size: cover;
+}
+
+.space1-bg {
+  height: 100%;
+  background-image: url('../../../static/space/81310.jpg');
+  background-size: cover;
+}
+
+.space2-bg {
+  height: 100%;
+  background-image: url('../../../static/space/SL-011719-17920-65.jpg');
+  background-size: cover;
+}
+
+.space3-bg {
+  height: 100%;
+  background-image: url('../../../static/space/19449741.jpg');
+  background-size: cover;
+}
+
+
+.client-bg {
+  /* height: 100vh; */
+  width: 100%;
+  background-position: center center;
+  background-image: url('../../../static/images/bg-2.jpg');
+  background-size: cover;
+  object-fit: cover;
+}
+
+

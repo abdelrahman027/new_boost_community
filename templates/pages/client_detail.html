@@ -1,0 +1,254 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %} 
+Client
+{{selected_client.client_name}}
+ {% endblock title %} {% block content %}
+{%include 'parts/navbar.html' %}
+<section class="p-12 sales-bg ">
+  <div
+    class="flex items-center backdrop-blur-md shadow-lg justify-around border-2 rounded-lg w-3/4 mx-auto text-center"
+  >
+    <div class="w-fit rounded-lg p-4">
+      <img
+        src="{{selected_client.client_logo.url}}"
+        alt="{{selected_client.client_name}}"
+        class="w-80 h-80 rounded-full"
+      />
+      <h1 class="text-center text-2xl font-semibold">
+        {{selected_client.client_name}}
+      </h1>
+    </div>
+    <div class="text-start relative flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <p>Client ID : {{selected_client.client_id}}</p>
+        {% if selected_client.status %}
+        <p class="flex items-center gap-2 font-semibold">
+          <i class="fa-solid fa-2x fa-square-check text-green-600"></i> Active
+        </p>
+        {% else %}
+        <p class="flex items-center gap-2 font-semibold">
+          <i class="fa-solid fa-2x fa-rectangle-xmark text-red-600"></i>
+          Inactive
+        </p>
+        {% endif %}
+      </div>
+      <p>Registred At : {{selected_client.registred_date|date:"d M, Y" }}</p>
+      <p>Location: {{selected_client.location}}</p>
+      <h2 class="border-b-2 pb-8">
+        Resposable Employee: {{selected_client.sales_person.firstname}}
+        {{selected_client.sales_person.lastname}}
+      </h2>
+      <h2>Contact Person: {{selected_client.contact_person}}</h2>
+      <div class="flex items-start justify-between">
+        <h3>{{selected_client.email}}</h3>
+        <h3>{{selected_client.phone}}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-12">
+    <h3 class="text-2xl font-semibold mb-6">
+      {{selected_client.client_name}} Projects
+    </h3>
+
+    {% for project in client_projects %}
+    <div class="max-w-full mx-auto p-0">
+      <div
+        class="w-full flex  justify-between no-scrollbar items-center no-scroll mb-3 mt-1 pl-3"
+      >
+        <div class="shadow-lg p-6">
+          <h3 class="text-lg font-semibold text-slate-800 ">
+            {{project.project_name}}
+          </h3>
+          <p class="text-slate-500 pb-4">
+            Number of Courses : {{project.course_set.count}}
+          </p>
+          <a href="{% url 'projects' %}{{project.project_id}}" class="btn-primary mt-4">Go to</a>
+        </div>
+        {% endfor %}
+
+        {% comment %}
+
+        <div class="flex justify-between items-center px-4 py-3">
+          <div class="text-sm text-slate-500">Showing <b>1-5</b> of 45</div>
+          <div class="flex space-x-1">
+            <button
+              class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+            >
+              Prev
+            </button>
+            <button
+              class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-white bg-slate-800 border border-slate-800 rounded hover:bg-slate-600 hover:border-slate-600 transition duration-200 ease"
+            >
+              1
+            </button>
+            <button
+              class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+            >
+              2
+            </button>
+            <button
+              class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+            >
+              3
+            </button>
+            <button
+              class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endcomment %}
+    </div>
+  </div>
+
+</section>
+
+{% endblock content %} {% block script %}
+<script>
+  let rdataSorted;
+  //sort function
+
+  let sortAsc = false;
+  let courseName = true;
+  let coursePrice = false;
+  let courseLocation = false;
+  //end sort function
+
+  //live search
+  const data = "{{course_json}}";
+  const rdata = JSON.parse(data.replace(/&quot;/g, '"'));
+  console.log(rdata);
+  const nameFilter = document.getElementById("nameFilter");
+  const priceFilter = document.getElementById("priceFilter");
+  const locationFilter = document.getElementById("locationFilter");
+  console.log(rdataSorted);
+  // console.log(rdata.sort((a, b) => b.Price - a.Price));
+
+  const local_search = document.getElementById("nav_Search");
+  const course__body = document.getElementById("course__body");
+  const sortBtn = document.getElementById("sortBtn");
+  let filteredArr = [];
+  local_search.addEventListener("keyup", (e) => {
+    course__body.innerHTML = "";
+    console.log(filteredArr);
+    filteredArr = rdata.filter((course) =>
+      course["CourseName"].includes(e.target.value)
+    );
+    if (filteredArr.length > 0) {
+      filteredArr.map((item) => {
+        course__body.innerHTML += `<tr class="align-middle">
+                                    <th scope="row">${item.CourseID}</th>
+                                    <td>FNBN 00${item.CourseID}</td>
+                                    <td class="text-dark">${
+                                      item.CourseName
+                                    }</td>
+                                    <td>${item.InstructorName | title}</td>
+                                    <td class="price">${item.Price}</td>
+                                    <td>${item.StartDate}</td>
+                                    <td>${item.Duration}</td>
+                                    <td>${item.Location}</td>
+                                    <td>
+                                        <img src="{% static 'front-end-static/images/icons/dots.svg' %}" alt="icon">
+                                        </td>
+                                </tr>`;
+      });
+    }
+  });
+  //end live search
+
+  //filter toggles
+  courseName ? (nameFilter.style.color = "green") : "black";
+  coursePrice ? (priceFilter.style.color = "green") : "black";
+  courseLocation ? (locationFilter.style.color = "green") : "black";
+  nameFilter.addEventListener("click", () => {
+    nameFilter.style.color = "green";
+    priceFilter.style.color = "black";
+    locationFilter.style.color = "black";
+    courseName = true;
+    coursePrice = false;
+    courseLocation = false;
+  });
+  priceFilter.addEventListener("click", () => {
+    nameFilter.style.color = "black";
+    priceFilter.style.color = "green";
+    locationFilter.style.color = "black";
+    courseName = false;
+    coursePrice = true;
+    courseLocation = false;
+  });
+  locationFilter.addEventListener("click", () => {
+    nameFilter.style.color = "black";
+    priceFilter.style.color = "black";
+    locationFilter.style.color = "green";
+    courseName = false;
+    coursePrice = false;
+    courseLocation = true;
+  });
+
+  //sort filter
+  sortBtn.addEventListener("click", () => {
+    course__body.innerHTML = "";
+    sortAsc = !sortAsc;
+    //name conditions
+    if (sortAsc && courseName) {
+      rdataSorted = rdata.sort((a, b) =>
+        a.CourseName.toLowerCase().localeCompare(b.CourseName.toLowerCase())
+      );
+    } else if (!sortAsc && courseName) {
+      rdataSorted = rdata.sort((a, b) =>
+        b.CourseName.toLowerCase().localeCompare(a.CourseName.toLowerCase())
+      );
+    }
+    //price conditions
+    else if (sortAsc && coursePrice) {
+      rdataSorted = rdata.sort((a, b) => b.Price - a.Price);
+    } else if (!sortAsc && coursePrice) {
+      rdataSorted = rdata.sort((a, b) => a.Price - b.Price);
+    }
+    //location condition
+    if (sortAsc && courseLocation) {
+      rdataSorted = rdata.sort((a, b) =>
+        a.Location.toLowerCase().localeCompare(b.Location.toLowerCase())
+      );
+    } else if (!sortAsc && courseLocation) {
+      rdataSorted = rdata.sort((a, b) =>
+        b.Location.toLowerCase().localeCompare(a.Location.toLowerCase())
+      );
+    }
+    rdataSorted.map((item) => {
+      course__body.innerHTML += `<tr class="align-middle">
+                                    <th scope="row">${item.CourseID}</th>
+                                    <td>FNBN 00${item.CourseID}</td>
+                                    <td class="text-dark">${
+                                      item.CourseName
+                                    }</td>
+                                    <td>${item.InstructorName | title}</td>
+                                    <td class="price">${item.Price}</td>
+                                    <td>${item.StartDate}</td>
+                                    <td>${item.Duration}</td>
+                                    <td>${item.Location}</td>
+                                    <td>
+                                        <img src="{% static 'front-end-static/images/icons/dots.svg' %}" alt="icon">
+                                        </td>
+                                </tr>`;
+    });
+    console.log(rdataSorted);
+  });
+  //end sort filter
+
+  //search toggler
+  const toggle_search = document.getElementById("toggle_search");
+  const search_toggler = () => {
+    if (local_search.type == "hidden") {
+      local_search.type = "text";
+    } else {
+      local_search.type = "hidden";
+    }
+  };
+  // end search toggler
+</script>
+{% endblock script %}

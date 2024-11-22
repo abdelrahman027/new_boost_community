@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Home
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+
+<main class="main-bg w-full h-screen">
+
+
+    <section class="px-12 pt-36 section-bg"  >
+        
+        <div class="title text-center border-b-2 pb-8 w-fit mx-auto text-2xl font-bold"><h2>Assesment Bank</h2></div>
+        <div class="cards grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center gap-6 mt-36">
+            {% for asses   in asessmentBank %}
+              
+
+    
+            <div class="card p-4 shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300  cursor-pointer backdrop-blur-lg backdrop-opacity-0 hover:backdrop-opacity-100  ">
+                <i class="fa-solid fa-2x fa-clipboard-question"></i>
+                <h1 class="text-xl py-4">{{asses.asessment_name}}</h1>
+                <h2 class="text-lg py-4">{{repo.description}}</h2>
+
+                <a class="btn-primary" href="{% url 'projects' %}">Go</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    </main>
+
+{% endblock content %}

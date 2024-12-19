@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Employee,Client,Course_status,Project,Course,Course_type,Repository,AsessmentBank,Simulation,Trainer,Task,Manager,Design_Request,Portfolio
+from .models import Employee,Client,Course_status,Project,Course,Course_type,Repository,AsessmentBank,Simulation,Trainer,Task,Manager,Design_Request,Portfolio,Notification
 from django.db.models import Count ,Q
 from django.contrib import messages
 from django.shortcuts import redirect ,get_object_or_404
@@ -80,8 +80,12 @@ def chat_gpt(request):
 @login_required
 def index(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     context={
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     
     return render(request,"pages/index.html",context)
@@ -90,10 +94,14 @@ def index(request):
 def projects(request):
     all_projects = Project.objects.all()
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
 
     context={
         'all_projects':all_projects,
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     return render(request,"pages/projects.html",context)
 
@@ -103,6 +111,8 @@ def projects(request):
 def projects_detail(request, id):
     selected_project=Project.objects.get(pk=id)
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     project_courses =Course.objects.filter(project__project_id=id)
     if request.method == 'POST':
         proposal_status = request.POST.get('proposal_status')
@@ -137,7 +147,9 @@ def projects_detail(request, id):
         'selected_project': selected_project,
         # "client_projects":client_projects,
         'projects_courses_json': json.dumps(list(Course.objects.filter(project__project_id=id).values()), sort_keys=True, default=str),
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
             }
     return render(request, 'pages/project_detail.html', context)
 # def login(request):
@@ -147,13 +159,16 @@ def projects_detail(request, id):
 def courses(request):
     all_courses = Course.objects.all()
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
 
     context={
         'all_courses':all_courses,
         "employee":employee,
         'course_json': json.dumps(list(Course.objects.values()), sort_keys=True, default=str),
-
-    }
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
+            }
     return render(request,"pages/courses.html",context)
 
 @login_required
@@ -161,6 +176,8 @@ def public_courses(request):
     public_courses = Course.objects.filter(course_type=Course_type.public_course)
     sales_id =request.GET.get('sales_id')
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     all_sales=Employee.objects.filter(department__department_name="Sales")
 
     if sales_id :
@@ -178,6 +195,8 @@ def public_courses(request):
         "sales_id":sales_id,
         "sales_courses":sales_courses,
         'course_json': json.dumps(list(Course.objects.filter(Sales_man__employee_id=sales_id).values()), sort_keys=True, default=str),
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
 
     }
     return render(request,"pages/public_courses.html",context)
@@ -187,6 +206,8 @@ def courses_detail(request,id):
     selected_course = Course.objects.get(pk=id)
     course_sales=selected_course.Sales_man
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     if request.method == 'POST':
         material_status = request.POST.get('material_status')
         number_of_attendees = request.POST.get('number_of_attendees')
@@ -227,6 +248,8 @@ def courses_detail(request,id):
         "employee":employee,
         "course_sales":course_sales,
         'course_json': json.dumps(list(Course.objects.values()), sort_keys=True, default=str),
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
 
     }
     return render(request,"pages/course_detail.html",context)
@@ -235,9 +258,13 @@ def courses_detail(request,id):
 @login_required
 def profile(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
 
     context={
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     
     return render(request,"pages/profile.html",context)
@@ -246,6 +273,8 @@ def clients(request):
     all_clients=Client.objects.all()
     sales_id =request.GET.get('sales_id')
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
 
     all_sales=Employee.objects.filter(department__department_name="Sales")
     if sales_id :
@@ -263,12 +292,16 @@ def clients(request):
         "sales_clients":sales_clients,
         "active_employee":active_employee,
         "sales_id":sales_id,
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     return render(request,"pages/clients.html",context)
 @login_required
 def clients_detail(request, id):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     selected_client=Client.objects.get(pk=id)
     client_projects=Project.objects.filter(client__client_id=id)
     
@@ -286,7 +319,9 @@ def clients_detail(request, id):
         'selected_client': selected_client,
         "client_projects":client_projects,
         'course_json': json.dumps(list(Course.objects.values()), sort_keys=True, default=str),
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
             }
     return render(request, 'pages/client_detail.html', context)
 
@@ -294,6 +329,8 @@ def clients_detail(request, id):
 @login_required
 def sales(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
 
     sales_men= Employee.objects.filter(department__department_name="Sales").annotate(
         active_client_count=Count('clients', filter=Q(clients__status=True)),
@@ -314,7 +351,9 @@ def sales(request):
         "sales_men":sales_men,
         "active_clients":sarah_active_clients,
         "active_clients":active_clients,
-        "employee":employee
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
 
     return render(request,"pages/sales.html",context)
@@ -323,6 +362,8 @@ def sales(request):
 @login_required
 def learning_developers(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     l_d_men=Employee.objects.filter(department__department_name="L&D")
     projects = Project.objects.all()
     repository =Repository.objects.all()
@@ -336,13 +377,17 @@ def learning_developers(request):
         "repository":repository,
         "asessmentBank":asessmentBank,
         "simulation":simulation,
-    }
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
+            }
     
     return render(request,"pages/l&d.html",context)
 
 @login_required
 def repository(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     l_d_men=Employee.objects.filter(department__department_name="L&D")
     projects = Project.objects.all()
     repository =Repository.objects.all()
@@ -356,7 +401,9 @@ def repository(request):
         "repository":repository,
         "asessmentBank":asessmentBank,
         "simulation":simulation,
-    }
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
+            }
     
     return render(request,"pages/repository.html",context)
 
@@ -364,6 +411,8 @@ def repository(request):
 @login_required
 def assesment_bank(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     l_d_men=Employee.objects.filter(department__department_name="L&D")
     projects = Project.objects.all()
     repository =Repository.objects.all()
@@ -377,12 +426,16 @@ def assesment_bank(request):
         "repository":repository,
         "asessmentBank":asessmentBank,
         "simulation":simulation,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     
     return render(request,"pages/assesment-bank.html",context)
 @login_required
 def simulation(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     l_d_men=Employee.objects.filter(department__department_name="L&D")
     projects = Project.objects.all()
     repository =Repository.objects.all()
@@ -396,6 +449,8 @@ def simulation(request):
         "repository":repository,
         "asessmentBank":asessmentBank,
         "simulation":simulation,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     
     return render(request,"pages/simulation.html",context)
@@ -431,6 +486,8 @@ def simulation(request):
 @login_required
 def create_own_Task(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     employee_tasks=Task.objects.filter(employee=employee.employee_id)
     employee_done=Task.objects.filter(employee=employee.employee_id,status="Done")
     employee_stuck=Task.objects.filter(employee=employee.employee_id,status="Stuck")
@@ -438,10 +495,17 @@ def create_own_Task(request):
     employee_missed=Task.objects.filter(employee=employee.employee_id,status="Missed")
     
     manager = Manager.objects.get(employee__employee_id=employee.employee_id)
-
-
+    stage=request.GET.get('stage')
+    if stage == "done":
+                employee_tasks=Task.objects.filter(employee=employee.employee_id,status="Done")
+    elif stage == "stuck":
+                employee_tasks=Task.objects.filter(employee=employee.employee_id,status="Stuck")
+    elif stage == "inprogress":
+                employee_tasks=Task.objects.filter(employee=employee.employee_id,status="In Progress")
+    elif stage == "missed":
+                employee_tasks=Task.objects.filter(employee=employee.employee_id,status="Missed")
     if request.method == 'POST':
-        if len(request.POST['task_name'].strip()) > 0:
+        if len(request.POST['task_name']) > 0:
             task_name = request.POST['task_name']
             task_desc = request.POST['description']
             task_status = request.POST['task_status']
@@ -465,7 +529,9 @@ def create_own_Task(request):
         "employee_done":employee_done,
         "employee_stuck":employee_stuck,
         "employee_inprogress":employee_inprogress,
-        "employee_missed":employee_missed
+        "employee_missed":employee_missed,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     return render(request,'pages/tasks.html',context)
 
@@ -473,7 +539,8 @@ def create_own_Task(request):
 @login_required
 def update_Task(request,id):
     employee = get_object_or_404(Employee, user=request.user)
-    employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     employee_tasks=Task.objects.filter(employee=employee.employee_id)
     employee_done=Task.objects.filter(employee=employee.employee_id,status="Done")
     employee_stuck=Task.objects.filter(employee=employee.employee_id,status="Stuck")
@@ -482,24 +549,32 @@ def update_Task(request,id):
     
     manager = Manager.objects.get(employee__employee_id=employee.employee_id)
     selected_task = Task.objects.get(pk=id)
+    # task_name = request.POST['task_name']
 
     if request.method == 'POST':
-        if len(request.POST['task_name'].strip()) > 0:
+        if len(request.POST['task_name']) > 0:
            task_name = request.POST['task_name']
            task_desc = request.POST['description']
            task_status = request.POST['task_status']
            task_deadline = request.POST['deadline']
            Task.objects.filter(pk=id).update(task_name=task_name,description=task_desc,status=task_status,deadline=task_deadline,employee=employee,manager=manager,department=employee.department,points=0)
+           print(task_name)
+
         return redirect('tasks')
     context ={
         "employee":employee,
         'selected_task':selected_task,
         "update":True,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     return render(request,'pages/update-task.html',context)
+
 @login_required
 def assign_tasks(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     all_employees = Employee.objects.all()
     
 
@@ -510,7 +585,7 @@ def assign_tasks(request):
     if request.method == 'POST':
         selected_employee = get_object_or_404(Employee, pk=request.POST['employee'])
         print(selected_employee)
-        if len(request.POST['task_name'].strip()) > 0:
+        if len(request.POST['task_name']) > 0:
            task_name = request.POST['task_name']
            task_desc = request.POST['description']
            task_status = request.POST['task_status']
@@ -518,10 +593,13 @@ def assign_tasks(request):
            employee_user = selected_employee
            
            Task.objects.create(task_name=task_name,description=task_desc,status=task_status,deadline=task_deadline,employee=employee_user,manager=manager,department=employee.department,points=0,)
+           Notification.objects.create(title=f"New Task {task_name}",message=task_desc,employee=employee_user)
         return redirect('tasks')
     context ={
         "employee":employee,
         "all_employees":all_employees,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     return render(request,'pages/assign_tasks.html',context)
 
@@ -552,6 +630,8 @@ def delete_task(request,id):
 @login_required
 def operations(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     l_d_men=Employee.objects.filter(department__department_name="L&D")
     projects = Project.objects.all()
     repository =Repository.objects.all()
@@ -565,6 +645,8 @@ def operations(request):
         "repository":repository,
         "asessmentBank":asessmentBank,
         "simulation":simulation,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     
     return render(request,"pages/operations.html",context)
@@ -572,6 +654,8 @@ def operations(request):
 @login_required
 def designers(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     l_d_men=Employee.objects.filter(department__department_name="L&D")
     projects = Project.objects.all()
     repository =Repository.objects.all()
@@ -585,6 +669,8 @@ def designers(request):
         "repository":repository,
         "asessmentBank":asessmentBank,
         "simulation":simulation,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
     }
     
     return render(request,"pages/designers.html",context)
@@ -593,12 +679,15 @@ def designers(request):
 @login_required
 def designer_requests(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     requests=Design_Request.objects.all()
-    
 
     context={
         "employee":employee,
         "requests":requests,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
 
     }
     
@@ -607,12 +696,16 @@ def designer_requests(request):
 @login_required
 def portoflio(request):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     portfolio=Portfolio.objects.all()
     
 
     context={
         "employee":employee,
         "portfolio":portfolio,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
 
     }
     
@@ -621,11 +714,14 @@ def portoflio(request):
 def employees_list(request):
     employee = get_object_or_404(Employee, user=request.user)
     all_employees=Employee.objects.all()
-    
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
 
     context={
         "employee":employee,
         "all_employees":all_employees,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
 
     }
     
@@ -633,6 +729,8 @@ def employees_list(request):
 @login_required
 def employees_detail(request,id):
     employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     selected_employee=get_object_or_404(Employee, employee_id=id)
     employee_tasks=Task.objects.filter(employee=selected_employee.employee_id)
     employee_done=Task.objects.filter(employee=selected_employee.employee_id,status="Done")
@@ -649,9 +747,67 @@ def employees_detail(request,id):
         "employee_done":employee_done,
         "employee_stuck":employee_stuck,
         "employee_inprogress":employee_inprogress,
-        "employee_missed":employee_missed
+        "employee_missed":employee_missed,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
 
 
     }
     
     return render(request,"pages/employee_detail.html",context)
+
+
+
+
+@login_required
+def care(request):
+    employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
+    context={
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
+    }
+    
+    return render(request,"pages/care.html",context)
+
+
+
+@login_required
+def AllTasks(request):
+    employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
+    tasks = Task.objects.all()
+    context={
+        "employee":employee,
+        "tasks":tasks,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
+    }
+    
+    return render(request,"pages/all_tasks.html",context)
+
+@login_required
+def all_Notifications(request):
+    employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
+    tasks = Task.objects.all()
+    context={
+        "employee":employee,
+        "tasks":tasks,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications
+    }
+    
+    return render(request,"pages/all_notifications.html",context)
+
+@login_required
+def mark_notifications_read(request):
+    if request.method == 'POST':
+        employee = get_object_or_404(Employee, user=request.user)
+        Notification.objects.filter(employee=employee, is_read=False).update(is_read=True)
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)

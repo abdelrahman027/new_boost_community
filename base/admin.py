@@ -36,5 +36,6 @@ admin.site.register(models.Hotel_of_course)
 admin.site.register(models.Manager)
 # admin.site.register(models.Trainers_hotel)
 admin.site.register(models.Repository)
+admin.site.register(models.Notification)
 
 

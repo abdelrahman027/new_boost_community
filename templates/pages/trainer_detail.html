@@ -10,6 +10,7 @@ Trainer
 {% include 'parts/navbar.html' %}
 <section class="px-12 mb-12">
     <div class="flex items-center justify-center gap-6 ">
+
         <h1 class="my-12 text-2xl font-semibold tracking-wider text-center border-b-2 pb-2">
             <span class="text-xs">DR</span> {{selected_trainer.name}} </h1>
 
@@ -21,7 +22,7 @@ Trainer
         <div class="flex items-center justify-center gap-6">
 
 
-            <div class="flex items-center  rounded-lg justify-center gap-6 border overflow-hidden">
+            <div class="flex items-center  rounded-lg justify-center gap-6 border overflow-hidden shadow-lg">
                 <div>
                     <img src="{{selected_trainer.trainer_photo.url}}" alt="boost" class="rounded-l-lg">
                 </div>
@@ -38,11 +39,99 @@ Trainer
                     {% endif %}
 
                 </div>
-
+                
 
             </div>
         </div>
     </div>
+
+    <div class="text-center mt-12">
+        <div class="mb-8 flex items-center justify-between gap-4">
+
+            <h2 class="text-2xl font-semibold border-b-4">Courses</h2> 
+            <div >
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="comment" placeholder="Comment" class="bg-transparent border border-slate-200 rounded-lg px-4 py-2">
+                    <button class="btn-primary mt-0 p-2">Add Comment</button>
+            </div>
+
+        </div>
+        </div>
+    {% if selected_trainer.courses.all %}
+    <table class="w-full text-left table-auto min-w-max">
+        <thead>
+          <tr>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Course ID
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Name
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Duration
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Location
+              </p>
+            </th>
+            <th class="p-4 border-b border-slate-200 bg-slate-50">
+              <p class="text-sm font-normal leading-none text-slate-500">
+                Date
+              </p>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="course__body">
+    {% for course in selected_trainer.courses.all %}
+             <tr class="hover:bg-slate-50 border-b border-slate-200">
+            <td class="p-4 py-5">
+              <p
+                class="block font-semibold text-sm text-slate-800 hover:underline"
+              >
+                <a href="{% url 'courses' %}{{course.course_id}}">COURSE{{course.course_id}}</a>
+              </p>
+            </td>
+
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="{% url 'courses' %}{{course.course_id}}">{{course.course_name}}</a>
+              </p>
+            </td>
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="{% url 'courses' %}{{course.course_id}}">{{course.course_duration}} Days</a>
+              </p>
+            </td>
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="{% url 'courses' %}{{course.course_id}}">{{course.location}}</a>
+              </p>
+            </td>
+            <td class="p-4 py-5">
+              <p class="text-sm text-slate-500 hover:underline">
+                <a href="">{{course.course_Date|date:"D d M Y"}}</a>
+              </p>
+            </td>
+          </tr>
+    
+    {% endfor %}
+</tbody>
+</table>
+    {% else %}
+    
+    <h3 class="p-4 border rounded-full w-fit mx-auto shadow-lg">No Courses assigned to this trainer</h3>
+    {% endif %}
+    </div>
+  
+
 
     <div class="flex items-center justify-between">
 
@@ -87,10 +176,18 @@ Trainer
 
             </div>
 
-
-
+            
+            
+            
         </div>
+        
+    </div>
+    <div class="text-center mt-12 w-1/2 mx-auto shadow-lg p-2 rounded-lg">
+        <h3 class="text-2xl font-semibold border-b-4 w-fit mx-auto"> Comments</h3>
+        <div class="text-start mt-2">
 
+            <p>No comments for this trainer</p>
+        </div>
     </div>
     </div>
 

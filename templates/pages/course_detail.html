@@ -59,6 +59,26 @@ Home
 
 
             </div>
+
+            <div class="">
+                <h2 class="mb-4 pb-2 font-semibold  border-b-2 w-fit ">trainer</h2>
+                {% if selected_course.trainer %}
+                <div class="flex border-2 shadow-lg w-fit items-center justify-start gap-8 rounded-lg">
+                    <img src="{{selected_course.trainer.trainer_photo.url}}" alt="trainer" class="w-24 h-24">
+                    <div class="p-2">
+                        <h2> {{selected_course.trainer.name}}</h2>
+                        <p class="text-slate-500 text-xs"><i class="fa-solid fa-location-dot"></i> {{selected_course.trainer.nationality}}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="flex border-2 shadow-lg w-fit items-center justify-start gap-8 rounded-lg">
+                    <div class="p-2">
+
+                        <p class="text-slate-500 text-xs">No trainer assigned for this course</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 

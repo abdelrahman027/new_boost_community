@@ -95,23 +95,23 @@
               <p
                 class="block font-semibold text-sm text-slate-800 hover:underline"
               >
-                <a href="/">COURSE{{course.course_id}}</a>
+                <a href="{% url 'courses' %}{{course.course_id}}">COURSE{{course.course_id}}</a>
               </p>
             </td>
 
             <td class="p-4 py-5">
               <p class="text-sm text-slate-500 hover:underline">
-                <a href="/">{{course.course_name}}</a>
+                <a href="{% url 'courses' %}{{course.course_id}}">{{course.course_name}}</a>
               </p>
             </td>
             <td class="p-4 py-5">
               <p class="text-sm text-slate-500 hover:underline">
-                <a href="/">{{course.course_duration}} Days</a>
+                <a href="{% url 'courses' %}{{course.course_id}}">{{course.course_duration}} Days</a>
               </p>
             </td>
             <td class="p-4 py-5">
               <p class="text-sm text-slate-500 hover:underline">
-                <a href="/">{{course.location}}</a>
+                <a href="{% url 'courses' %}{{course.course_id}}">{{course.location}}</a>
               </p>
             </td>
             <td class="p-4 py-5">
@@ -232,26 +232,26 @@
           </div>
           Status :
           <select name="proposal_status" id="" class="rounded-lg">
-            {% if selected_project.proposal_status == 'Accepted' %}
-            <option value="Accepted" selected>Accepted</option>
+            {% if selected_project.proposal_status == 'waiting' %}
+            <option value="waiting" selected>waiting</option>
             {% else %}
-            <option value="Accepted">Accepted</option>
-            {% endif %} {% if selected_project.proposal_status == 'Issued' %}
-            <option value="Issued" selected>Issued</option>
+            <option value="waiting">waiting</option>
+            {% endif %} {% if selected_project.proposal_status == 'working' %}
+            <option value="working" selected>working</option>
             {% else %}
-            <option value="Issued">Issued</option>
+            <option value="working">working</option>
             {% endif %} 
-            {% if selected_project.proposal_status == 'Paid' %}
-            <option value="Paid" selected>Paid</option>
+            {% if selected_project.proposal_status == 'accepted' %}
+            <option value="accepted" selected>accepted</option>
             {% else %}
-            <option value="Paid">Paid</option>
+            <option value="accepted">accepted</option>
             {% endif %} 
 
 
-            {% if selected_project.proposal_status == 'Waiting papers' %}
-            <option value="Waiting papers" selected>Waiting papers<option>
+            {% if selected_project.proposal_status == 'returned' %}
+            <option value="returned" selected>returned<option>
             {% else %}
-            <option value="Waiting papers" >Waiting papers<option>
+            <option value="returned" >returned<option>
             {% endif %} 
 
            

@@ -50,5 +50,9 @@ urlpatterns = [
      # path('chatbot/', views.make_view.as_view(),name="chatbot"),
 
      path('logout/', views.logout_user, name='logout'),
+     path('care/', views.care, name='care'),
+     path('all_tasks/', views.AllTasks, name='all_tasks'),
+     path('all_notifications/', views.all_Notifications, name='all_notifications'),
+     path('mark-notifications-read/', views.mark_notifications_read, name='mark-notifications-read'),
 
 ]

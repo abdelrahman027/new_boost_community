@@ -51,26 +51,26 @@ Tasks
       Tickets
     {% endcomment %}
     <div class="pt-12 flex items-center justify-center gap-3">
-        <div class="total flex item-center justify-center p-12 flex-col text-center rounded-lg bg-indigo-400">
+        <div id="total_btn" class="total cursor-pointer hover:bg-indigo-500 flex item-center justify-center p-12 flex-col text-center rounded-lg bg-indigo-400">
             <div>{{employee_tasks.count}}</div>
-            <h3>Total Tickets</h3>
+            <a href="{% url 'tasks' %}">Total Tickets</a>
         </div>
-        <div class="inprogress flex item-center justify-center p-12 flex-col text-center rounded-lg bg-amber-200">
+        <div class="inprogress flex item-center hover:bg-amber-300 justify-center p-12 flex-col text-center rounded-lg bg-amber-200">
             <div>{{employee_inprogress.count}}</div>
-            <h3>Inprogress Tickets</h3>
+            <a href="{% url 'tasks' %}?stage=inprogress">Inprogress Tickets</a>
 
         </div>
-        <div class="stuck flex item-center justify-center p-12 flex-col text-center rounded-lg bg-cyan-400">
+        <div class="stuck flex item-center hover:bg-cyan-400 justify-center p-12 flex-col text-center rounded-lg bg-cyan-400">
             <div>{{employee_stuck.count}}</div>
-            <h3>Stuck Tickets</h3>
+            <a href="{% url 'tasks' %}?stage=stuck">Stuck Tickets</a>
         </div>
-        <div class="missed flex item-center justify-center p-12 flex-col text-center rounded-lg bg-red-400">
-            <div>{{employee_missed.count}}</div>
-            <h3>Missed Tickets</h3>
+        <div class="missed flex item-center justify-center p-12 hover:bg-red-500 flex-col text-center rounded-lg bg-red-400">
+            <div>{{employee_missed.count}}</div>  
+            <a href="{% url 'tasks' %}?stage=missed">Missed Tickets</a>
         </div>
-        <div class="done flex item-center justify-center p-12 flex-col text-center rounded-lg bg-green-400">
+        <div class="done flex item-center justify-center p-12 flex-col hover:bg-green-500 text-center rounded-lg bg-green-400">
             <div>{{employee_done.count}}</div>
-            <h3>Done Tickets</h3>
+            <a href="{% url 'tasks' %}?stage=done">Done Tickets</a>
         </div>
     </div>
 
@@ -141,7 +141,9 @@ Tasks
                         <td class="py-4 px-6 ">{{task.points}}</td>
                         <td class="py-4 px-6">
                             <a href="{% url 'tasks'%}update/{{task.task_id}}"class="pr-6"><i class="fa-solid fa-pen-to-square"></i></a>
+                            {% if user.is_superuser %}
                             <a href="{% url 'tasks'%}delete/{{task.task_id}}"><i class="fa-solid fa-trash-can"></i></a>
+                            {% endif %}
 
                         </td>
                     
@@ -245,6 +247,10 @@ id="add_task_modal"
 
 {% block script %}
   <script>
+
+
+    const total_tasks = document.getElementById("total_tasks")
+
     const modal_div= document.getElementById("add_task_modal")
  const show_modal = ()=>{
     modal_div.classList.add("w-full")

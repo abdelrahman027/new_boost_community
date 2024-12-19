@@ -20,10 +20,10 @@ class Invoice_status(models.TextChoices):
     waiting_papers="waiting papers"
 
 class Proposal_status(models.TextChoices):
-    recieved="recieved"
-    pricing="pricing"
-    priced="priced"
-    sent="sent"
+    waiting="waiting"
+    working="working"
+    accepted="accepted"
+    returned="returned"
 
 
 class Task_Status(models.TextChoices):
@@ -211,12 +211,13 @@ class Simulation(models.Model):
 
 class Inventory(models.Model):
     inventory_id=models.AutoField(primary_key=True)
+    inventory_name=models.CharField(max_length=100,default="item")
     descripttion=models.TextField(null=True,blank=True)
     quantity=models.CharField(max_length=100)
     branch=models.CharField(max_length=100,choices=company_branch.choices)
 
     def __str__(self):
-        return self.inventory_id
+        return self.inventory_name
 
 class Logestics(models.Model):
     logestic_id=models.AutoField(primary_key=True)
@@ -283,7 +284,7 @@ class Project(models.Model):
     proposal_name=models.CharField(max_length=255,null=True,blank=True,default=project_name)
     proposal_dead_line=models.DateField(default=date.today(),null=True,blank=True)
     proposal_document = models.FileField(null=True,blank=True,upload_to='pdf')
-    proposal_status = models.CharField(max_length=20,choices=Proposal_status.choices,default=Proposal_status.recieved)
+    proposal_status = models.CharField(max_length=20,choices=Proposal_status.choices,default=Proposal_status.waiting)
     # project=models.ForeignKey(Project,on_delete=models.CASCADE)
     rfp_document = models.FileField(null=True,blank=True,upload_to='pdf')
 
@@ -328,7 +329,7 @@ class Course(models.Model):
     hotel = models.ForeignKey(Hotel_of_course,on_delete=models.SET_NULL,null=True,blank=True)
     facilitator=models.ForeignKey(Facilitator,on_delete=models.SET_NULL,null=True)
     Sales_man=models.ForeignKey(Employee,on_delete=models.SET_NULL,null=True,related_name="courses")
-    trainer=models.ForeignKey(Trainer,on_delete=models.SET_NULL,null=True,blank=True)
+    trainer=models.ForeignKey(Trainer,on_delete=models.SET_NULL,null=True,blank=True,related_name="courses")
     project=models.ForeignKey(Project,on_delete=models.CASCADE,null=True,blank=True)
     contract = models.FileField(null=True,blank=True,upload_to='pdf')
     invoice= models.FileField(null=True,blank=True,upload_to='pdf')
@@ -351,7 +352,17 @@ class Course(models.Model):
 
 
 
+class Notification(models.Model):
 
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='notifications')
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.title} - {self.employee.firstname} {self.employee.lastname}"
 
 
 

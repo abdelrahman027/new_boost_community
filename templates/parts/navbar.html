@@ -1,110 +1,82 @@
 {% load static %}
 
 <!-- Navbar -->
-
 <header class="">
   <div class="bg-[#22272C] px-12 py-2 flex justify-between items-center text-white">
-
-    <!-- LOGO -->
     <div>
       <img src="{% static 'images/boost.png' %}" class="w-32" alt="Logo" />
     </div>
 
-    <!-- SEARCH -->
-    <div class="relative shadow-lg">
-      <input
-        class="px-6 w-96 rounded-lg"
-        type="search"
-        name="global-search"
-        id="global-search"
-        placeholder="Search..."
-      />
-      <button class="absolute top-[22%] right-2 text-gray-400">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
-    <!-- USER ICONS -->
-    <div>
-      <div class="relative flex items-center gap-6" >
+    {% csrf_token %}
+
     <div class="flex items-center gap-6 text-white">
         <div class="relative hover:bg-slate-600  cursor-pointer w-6 h-6 flex items-center justify-center p-4 rounded-full" id="nav-profile">
-            <i class="fa-regular fa-bell "></i>
-            <div class="absolute top-0 left-3 w-3 h-3 text-white bg-red-600 rounded-full flex items-center justify-center text-xs">0</div>
+            <i class="fa-regular fa-bell"></i>
+            <div class="absolute top-0 left-3 w-3 h-3 text-white bg-red-600 rounded-full flex items-center justify-center text-xs notification-count">{{not_read_notifications.count}}</div>
             <div
-            class="absolute transition-all duration-300 h-0 shadow-lg top-6 left-4 p-2 rounded-lg text-black w-[150px]  py-4 hidden bg-white z-30"
+            class="absolute transition-all duration-300  shadow-lg top-6 left-4 p-2 rounded-lg text-black w-[300px] h-fit  max-h-[800px] overflow-auto py-4 hidden bg-white z-30"
             id="nav-profile-dropdown"
           >
-          <p>No notifications for you !<p/>
+          <h2 class="text-xl font-semibold border-b-2">Notifications</h2>
+          {% if all_notifications.count > 0 %}
+
+          {% for notification in all_notifications %} 
+          <div class="p-2 hover:bg-slate-100 cursor-pointer bg-slate-50">
+            
+            <p class="text-sm truncate">
+              <a href="{% url 'all_notifications' %}"> 
+                {{notification.title}}
+              </a>
+            </p>
+            <span class="text-xs">{{notification.created_at|timesince}} ago</span>
+          </div>
+          {% endfor %}
+          {% else %}
+          <p>No notifications for you!</p>
+          {% endif %}
           </div>
         </div>
-        <div class=" hover:bg-slate-600 p-4 rounded-full cursor-pointer w-6 h-6 flex items-center justify-center">
-            <i class="fa-solid  fa-robot"></i>
-        </div>
-    </div >
-
-    {% if employee.employee_photo.url %}
+        {% if employee.employee_photo.url %}
         <img
           src="{{ employee.employee_photo.url }}"
           class="w-8 rounded-full cursor-pointer"
           alt="Logo"
           
         />
+        
         {% endif %}
         <span>{{employee.firstname}} {{employee.lastname}}</span>
-
-        <a class="text-xs hover:bg-slate-600 w-12 h-12  flex items-center justify-center rounded-full" href="{% url 'logout' %}">logout</a>
-        <!-- DROP DOWN -->
-
-        
-      </div>
+        <a class="text-xs hover:bg-slate-600 w-12 h-12 flex items-center justify-center rounded-full" href="{% url 'logout' %}">logout</a>
     </div>
   </div>
 
   <!-- MAIN NAV -->
-  <div
-    class="bg-[#363F49] shadow-2xl px-16 flex gap-20 text-white items-center justify-between"
-  >
+  <div class="bg-[#363F49] shadow-2xl px-16 flex gap-20 text-white items-center justify-between">
     <div class="flex gap-8">
       <div class="px-4 py-2 hover:bg-[#22272c] transition-all duration-300 cursor-pointer">
-        <a href="{% url 'tasks'  %}"><i class="fa-solid fa-house"></i></a>
-        
+        <a href="{% url 'tasks' %}"><i class="fa-solid fa-house"></i></a>
       </div>
       <div class="px-4 py-2 hover:bg-[#22272c] transition-all duration-300 cursor-pointer">
         <a href="{% url 'home' %}"><i class="fa-solid fa-circle-nodes"></i></a>
-        
       </div>
       <div class="px-4 py-2 hover:bg-[#22272c] transition-all duration-300 cursor-pointer">
         <i class="fa-solid fa-clock-rotate-left"></i>
       </div>
     </div>
     <ul class="flex gap-12">
-      <li
-        class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300"
-      >
+      <li class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300">
         <a href="{% url 'projects' %}">Projects</a>
       </li>
-
-      <li
-        class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300"
-      >
+      <li class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300">
         <a href="{% url 'clients' %}">Clients</a>
       </li>
-
-      <li
-        class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300"
-      >
+      <li class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300">
         <a href="{% url 'courses' %}">Calender</a>
       </li>
-
-      <li
-        class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300"
-      >
-        <a href="{% url "employees" %}">Employees</a>
+      <li class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300">
+        <a href="{% url 'employees' %}">Employees</a>
       </li>
-
-      <li
-        class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300"
-      >
+      <li class="relative px-4 py-2 hover:bg-[#22272c] transition-all duration-300">
         <a href="{% url 'admin:index' %}">Admin</a>
       </li>
     </ul>
@@ -112,22 +84,40 @@
 </header>
 
 {% block script %}
-
- <script>
+<script>
   const navProfile = document.getElementById("nav-profile");
   const navDropDown = document.getElementById("nav-profile-dropdown");
+  
+  const markNotificationsAsRead = async () => {
+    try {
+      const response = await fetch('/mark-notifications-read/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        },
+      });
+      if (response.ok) {
+        const notificationCount = document.querySelector('.notification-count');
+        notificationCount.textContent = '0';
+      }
+    } catch (error) {
+      console.error('Error marking notifications as read:', error);
+    }
+  };
+
   const toggleDropdown = function () {
     navDropDown.classList.toggle("hidden");
-    navDropDown.classList.toggle("h-0");
     navDropDown.classList.toggle("h-fit");
-
-
+    
+    // Mark notifications as read when opening dropdown
+    if (!navDropDown.classList.contains("hidden")) {
+      markNotificationsAsRead();
+    }
   };
 
   navProfile.addEventListener("click", function (e) {
     e.stopPropagation();
     toggleDropdown();
   });
-</script> 
-
+</script>
 {% endblock script %}

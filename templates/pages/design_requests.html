@@ -14,9 +14,14 @@
     <div class="cards grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center gap-6 mt-36">
        {% for reqeusted in requests %}
         <div class="card p-4 shadow-lg rounded-lg hover:shadow-2xl transition-all duration-300  cursor-pointer backdrop-blur-sm hover:backdrop-blur-xl  ">
-            <h1 class="text-xl py-4">from : {{reqeusted.requested_from}}</h1>
+            <h1 class="text-xl py-4">from : {{reqeusted.requested_from.firstname}}</h1>
             <h2 class="text-xl py-4">{{reqeusted.design_type}} Design </h2>
-            <a class="btn-primary" href="{% url 'projects' %}">Go</a>
+            <p class="mb-6 text-sm text-slate-500 truncate">{{reqeusted.comments}}</p>
+            <div class="flex gap-2 justify-between">
+                <a class="btn-primary" href="{{reqeusted.design_file}}">Go</a>
+
+                <a class="btn-primary" href="{{reqeusted.design_file}}">Edit</a>
+            </div>
         </div>
         {% endfor %}
     </div>

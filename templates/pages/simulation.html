@@ -29,7 +29,11 @@ Home
                     <img src="{{sim.simulation_photo.url}}" alt="pic" class="w-24 h-24 text-center rounded-full">
                 </div>
 
-                <a class="btn-primary" href="{% url 'projects' %}">Go</a>
+                <div>
+                    <p>{{sim.comments}}</p>
+                </div>
+
+                <a class="btn-primary" href="{{sim.learning_guide.url}}">Go</a>
             </div>
             {% endfor %}
         </div>

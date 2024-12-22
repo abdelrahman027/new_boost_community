@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     'base',
     'trainers',
+    "venues",
 
 
     'django_browser_reload',
@@ -145,6 +146,16 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+#EMAIL SENDING LOGIC
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'boostuae2001@gmail.com'
+EMAIL_HOST_PASSWORD = 'hqhe jupb ysry pyfu'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
 
 
 # Static files (CSS, JavaScript, Images)

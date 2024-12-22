@@ -1,4 +1,8 @@
+from datetime import date
+from ssl import create_default_context
+from django.utils import timezone
 from django.db import models
+
 
 # from base.models import Course
 
@@ -64,8 +68,11 @@ class Flight(models.Model):
     flight_id=models.AutoField(primary_key=True)
     trainer= models.ForeignKey(Trainer,on_delete=models.CASCADE)
     # course =models.ForeignKey(Course,on_delete=models.CASCADE)
-    from_to=models.DateField(auto_now_add=True)
+    departure_date=models.DateTimeField(null=True,blank=True)
+    flight_from=models.CharField(max_length=255,default="Cairo")
+    flight_to=models.CharField(max_length=255,default="Abudhabi")
     Ticket= models.FileField(null=True,blank=True,upload_to='pdf')
+    created_at= models.DateField(auto_now_add=True,null=True,blank=True)
 
     def __str__(self):
         return f"{self.trainer} hotel: {self.flight_id}"
@@ -78,8 +85,9 @@ class Visa(models.Model):
     # course=models.ForeignKey(Course,on_delete=models.CASCADE)
     country=models.CharField(max_length=255)
     status=models.CharField(max_length=100,choices=Visa_status.choices)
+    vis_pdf=models.FileField(null=True,blank=True,upload_to='pdf')
+    created_at= models.DateField(auto_now_add=True,null=True,blank=True)
 
     def __str__(self):
-        return f"{self.trainer} course :{self.course} country: {self.country}"
+        return f"{self.trainer} country: {self.country}"
 
-    

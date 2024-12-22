@@ -206,7 +206,29 @@ id="add_task_modal"
             </div>
 
             {% endif %}
-            <div class="w-full max-w-sm min-w-[200px]">
+            <div class="w-full  hidden max-w-sm min-w-[200px]">
+              <label class="block mb-2 text-sm text-slate-600">
+                Task Name
+              </label>
+              <input type="text" name="task_name" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="task name" value="{{selected_task.task_name}}" />
+
+          </div>
+          
+          <div class="w-full  hidden max-w-sm min-w-[200px]">
+            <label class="block mb-2 text-sm text-slate-600">
+              Description
+            </label>
+            <input type="text" name="description" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none  focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="description" value="{{selected_task.description}}" />
+          </div>
+
+  
+            <div class="w-full hidden max-w-sm min-w-[200px]">
+              <label class="block mb-2 text-sm text-slate-600">
+                DeadLine
+              </label>
+              <input type="date" value="{{selected_task.deadline|date:'Y-m-d'}}" name="deadline" class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="deadline" />
+            </div>
+            <div class="w-full  max-w-sm min-w-[200px]">
               <label class="block mb-2 text-sm text-slate-600">
                 Status
               </label>

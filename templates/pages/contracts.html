@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Home
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+
+    {% comment %}
+      Tickets
+    {% endcomment %}
+    <div class="pt-12 flex items-center justify-center gap-3">
+        <h1 class="text-2xl font-semibold tracking-wider text-center border-b-2 pb-2">Contracts </h1>
+    </div>
+
+    {% comment %}
+      Add Tickets
+    {% endcomment %}
+
+
+
+       {% comment %}
+         Table
+       {% endcomment %}
+
+        <div class="mt-12  px-12 " >
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">Title</th>
+                        <th scope="col" class="py-3 px-6">Contract with</th>
+                        <th scope="col" class="py-3 px-6">file</th>
+                        <th scope="col" class="py-3 px-6">employee</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for contract in contracts  %}
+                          
+                        
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="py-4 px-6">
+                            {{contract.title}}
+                        </td>
+                        {% if contract.trainer %}
+                        <td class="py-4 px-6">trainer: {{contract.trainer.name}}</td>
+                        {% else %}
+                        <td class="py-4 px-6">client: {{contract.client.client_name}}</td>
+                        {% endif %}
+                        {% if contract.file  %}
+                        <td class="py-4 px-6">
+                            <a href="{{contract.contract.url}}" class="text-blue-600 hover:underline">View</a>
+                        </td>
+                        {% else %}
+                        <td class="py-4 px-6">
+                            <p class="text-red-600">No File</p>
+                        </td>
+                        {% endif %}
+
+                        <td class="py-4 px-6">
+                            {{contract.employee.firstname}} {{contract.employee.lastname}}
+
+                        </td>
+                    
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+        </div>
+        
+    </div>
+    </div>
+
+
+{% endblock content %}

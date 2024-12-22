@@ -1,11 +1,12 @@
 from django.urls import path, include
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # path("", views.login, name="login-view"),
     path('', views.login_user, name='login'),
     path("home/",views.index,name="home"),
-
+    path("change-password/",auth_views.PasswordChangeView.as_view(),name="change-password"),
 
     path("profile/", views.profile, name="profile"),
     path("projects/", views.projects, name="projects"),
@@ -54,5 +55,7 @@ urlpatterns = [
      path('all_tasks/', views.AllTasks, name='all_tasks'),
      path('all_notifications/', views.all_Notifications, name='all_notifications'),
      path('mark-notifications-read/', views.mark_notifications_read, name='mark-notifications-read'),
+     path('invoices/', views.invoices, name='invoices'),
+     path('contracts/', views.contracts, name='contracts'),
 
 ]

@@ -14,7 +14,7 @@
             <i class="fa-regular fa-bell"></i>
             <div class="absolute top-0 left-3 w-3 h-3 text-white bg-red-600 rounded-full flex items-center justify-center text-xs notification-count">{{not_read_notifications.count}}</div>
             <div
-            class="absolute transition-all duration-300  shadow-lg top-6 left-4 p-2 rounded-lg text-black w-[300px] h-fit  max-h-[800px] overflow-auto py-4 hidden bg-white z-30"
+            class="absolute transition-all duration-300  shadow-lg top-6 left-4 p-2 rounded-lg text-black w-[300px]  max-h-[400px]  overflow-auto py-4 hidden bg-white z-30"
             id="nav-profile-dropdown"
           >
           <h2 class="text-xl font-semibold border-b-2">Notifications</h2>
@@ -47,6 +47,7 @@
         {% endif %}
         <span>{{employee.firstname}} {{employee.lastname}}</span>
         <a class="text-xs hover:bg-slate-600 w-12 h-12 flex items-center justify-center rounded-full" href="{% url 'logout' %}">logout</a>
+        <a class="text-xs hover:bg-slate-600 w-12 h-12 flex items-center justify-center rounded-full" href="{% url 'change-password' %}">Password</a>
     </div>
   </div>
 
@@ -60,7 +61,9 @@
         <a href="{% url 'home' %}"><i class="fa-solid fa-circle-nodes"></i></a>
       </div>
       <div class="px-4 py-2 hover:bg-[#22272c] transition-all duration-300 cursor-pointer">
-        <i class="fa-solid fa-clock-rotate-left"></i>
+        <a href="{% url 'all_tasks' %}">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </a>
       </div>
     </div>
     <ul class="flex gap-12">

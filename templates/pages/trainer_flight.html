@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Home
+{% endblock title %}
+
+{% block content %}
+{% include 'parts/navbar.html' %}
+
+    {% comment %}
+      Tickets
+    {% endcomment %}
+    <div class="pt-12 flex items-center justify-center gap-3">
+        <h1 class="text-2xl font-semibold tracking-wider text-center border-b-2 pb-2"> Trainer Flights </h1>
+    </div>
+
+    {% comment %}
+      Add Tickets
+    {% endcomment %}
+
+
+
+       {% comment %}
+         Table
+       {% endcomment %}
+
+        <div class="mt-12  px-12 " >
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="py-3 px-6">Trainer</th>
+                        <th scope="col" class="py-3 px-6">From</th>
+                        <th scope="col" class="py-3 px-6">To</th>
+                        <th scope="col" class="py-3 px-6">Ticket</th>
+                        <th scope="col" class="py-3 px-6">DepartureS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for flight in flights  %}
+                          
+                        
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="py-4 px-6">
+                            {{flight.trainer.name}}
+                        </td>
+                        <td class="py-4 px-6">{{flight.flight_from}}</td>
+                        <td class="py-4 px-6">{{flight.flight_to}}</td>
+                        {% if flight.Ticket  %}
+                        <td class="py-4 px-6">
+                            <a href="{{flight.Ticket.url}}" class="text-blue-600 hover:underline">Download</a>
+                        </td>
+                        {% else %}
+                        <td class="py-4 px-6">
+                            <p class="text-red-600">No File</p>
+                        </td>
+                        {% endif %}
+
+                        <td class="py-4 px-6">
+                            {{flight.departure_date|date:"D d M Y hh:mm A"}}
+
+                        </td>
+                    
+
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+        </div>
+        
+    </div>
+    </div>
+
+
+{% endblock content %}

@@ -1,5 +1,7 @@
+from email import message
+from django.core.mail import send_mail, send_mass_mail
 from django.shortcuts import render
-from .models import Employee,Client,Course_status,Project,Course,Course_type,Repository,AsessmentBank,Simulation,Trainer,Task,Manager,Design_Request,Portfolio,Notification
+from .models import Contract, Employee,Client,Course_status, Invoice,Project,Course,Course_type,Repository,AsessmentBank,Simulation,Trainer,Task,Manager,Design_Request,Portfolio,Notification
 from django.db.models import Count ,Q
 from django.contrib import messages
 from django.shortcuts import redirect ,get_object_or_404
@@ -82,6 +84,8 @@ def index(request):
     employee = get_object_or_404(Employee, user=request.user)
     all_notifications=employee.notifications.all().order_by('-created_at')
     not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
+    task_manger=Task.objects.get(task_id=20).manager
+    print(task_manger)
     context={
         "employee":employee,
         "all_notifications":all_notifications,
@@ -260,7 +264,6 @@ def profile(request):
     employee = get_object_or_404(Employee, user=request.user)
     all_notifications=employee.notifications.all().order_by('-created_at')
     not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
-
     context={
         "employee":employee,
         "all_notifications":all_notifications,
@@ -547,9 +550,13 @@ def update_Task(request,id):
     employee_inprogress=Task.objects.filter(employee=employee.employee_id,status="In Progress")
     employee_missed=Task.objects.filter(employee=employee.employee_id,status="Missed")
     
-    manager = Manager.objects.get(employee__employee_id=employee.employee_id)
+    task_manager = Task.objects.get(task_id=id).manager
     selected_task = Task.objects.get(pk=id)
     # task_name = request.POST['task_name']
+    selected_employee = employee
+    employee_user = selected_employee
+
+    print("email: ",task_manager.employee.email)
 
     if request.method == 'POST':
         if len(request.POST['task_name']) > 0:
@@ -557,8 +564,16 @@ def update_Task(request,id):
            task_desc = request.POST['description']
            task_status = request.POST['task_status']
            task_deadline = request.POST['deadline']
-           Task.objects.filter(pk=id).update(task_name=task_name,description=task_desc,status=task_status,deadline=task_deadline,employee=employee,manager=manager,department=employee.department,points=0)
-           print(task_name)
+           Task.objects.filter(pk=id).update(task_name=task_name,description=task_desc,status=task_status,deadline=task_deadline,employee=employee,manager=task_manager,department=employee.department,points=0)
+           Notification.objects.create(title=f"{employee_user.firstname} {employee_user.lastname} Updated Task {task_name}",message=f"{employee_user.firstname} {employee_user.lastname} marked status as {task_status}",employee=task_manager.employee)
+           email_mesaage=f"{employee_user.firstname} {employee_user.lastname} Updated Task {task_name} as {task_status} Please confirm"
+           send_mail(
+                f"New Task {task_name}",
+                email_mesaage,
+                "boostuae2001@gmail.com",
+                [task_manager.employee.email,],
+                fail_silently=False
+            )
 
         return redirect('tasks')
     context ={
@@ -591,9 +606,17 @@ def assign_tasks(request):
            task_status = request.POST['task_status']
            task_deadline = request.POST['deadline']
            employee_user = selected_employee
-           
+           print("email",employee_user.email)
            Task.objects.create(task_name=task_name,description=task_desc,status=task_status,deadline=task_deadline,employee=employee_user,manager=manager,department=employee.department,points=0,)
            Notification.objects.create(title=f"New Task {task_name}",message=task_desc,employee=employee_user)
+           email_mesaage=f"New Task {task_name} is assigned you from {manager.employee.firstname} {manager.employee.lastname}\n {task_desc}\n  don't reply this email \n Thank you."
+           send_mail(
+                f"New Task {task_name}",
+                email_mesaage,
+                "boostuae2001@gmail.com",
+                [employee_user.email,],
+                fail_silently=False
+            )
         return redirect('tasks')
     context ={
         "employee":employee,
@@ -780,6 +803,15 @@ def AllTasks(request):
     all_notifications=employee.notifications.all().order_by('-created_at')
     not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
     tasks = Task.objects.all()
+    stage=request.GET.get('stage')
+    if stage == "done":
+                tasks=Task.objects.filter(status="Done")
+    elif stage == "stuck":
+                tasks=Task.objects.filter(status="Stuck")
+    elif stage == "inprogress":
+                tasks=Task.objects.filter(status="In Progress")
+    elif stage == "missed":
+                tasks=Task.objects.filter(status="Missed")
     context={
         "employee":employee,
         "tasks":tasks,
@@ -811,3 +843,39 @@ def mark_notifications_read(request):
         Notification.objects.filter(employee=employee, is_read=False).update(is_read=True)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
+
+
+
+@login_required
+def invoices(request):
+    employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
+    invoices=Invoice.objects.all()
+    context={
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications,
+        "invoices":invoices
+    }
+    
+    return render(request,"pages/invoices.html",context)
+
+
+@login_required
+def contracts(request):
+    employee = get_object_or_404(Employee, user=request.user)
+    all_notifications=employee.notifications.all().order_by('-created_at')
+    not_read_notifications=employee.notifications.filter(is_read=False).order_by('-created_at')
+    contracts=Contract.objects.all()
+
+    
+    context={
+        "employee":employee,
+        "all_notifications":all_notifications,
+        "not_read_notifications":not_read_notifications,
+        "contracts":contracts
+
+    }
+    
+    return render(request,"pages/contracts.html",context)

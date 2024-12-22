@@ -1,7 +1,11 @@
+from hashlib import blake2b
+from pydoc import cli
+from time import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
 from trainers.models import Trainer
+from venues.models import Halls
 
 # Create your models here.
 
@@ -134,19 +138,19 @@ class Client(models.Model):
 
 
 
-class Hotel_of_course(models.Model):
-    hotel_id=models.AutoField(primary_key=True)
-    hotel_name=models.CharField(max_length=255)
-    hotel_location=models.CharField(max_length=255)
-    course_name=models.CharField(max_length=255)
-    review=models.CharField(max_length=255,default="0")
-    contact_person=models.CharField(max_length=255,null=True,blank=True)
-    email=models.EmailField(max_length=255,null=True,blank=True)
-    phone=models.CharField(max_length=255,null=True,blank=True)
-    comments=models.TextField(null=True,blank=True)
+# class Hotel_of_course(models.Model):
+#     hotel_id=models.AutoField(primary_key=True)
+#     hotel_name=models.CharField(max_length=255)
+#     hotel_location=models.CharField(max_length=255)
+#     course_name=models.CharField(max_length=255)
+#     review=models.CharField(max_length=255,default="0")
+#     contact_person=models.CharField(max_length=255,null=True,blank=True)
+#     email=models.EmailField(max_length=255,null=True,blank=True)
+#     phone=models.CharField(max_length=255,null=True,blank=True)
+#     comments=models.TextField(null=True,blank=True)
     
-    def __str__(self):
-        return self.hotel_name
+#     def __str__(self):
+#         return self.hotel_name
     
 
 class Facilitator(models.Model):
@@ -326,7 +330,7 @@ class Course(models.Model):
     # certificate = models.ForeignKey(Certificate,on_delete=models.CASCADE,null=True,blank=True)
     gift_items_description=models.TextField(null=True,blank=True)
     pre_post_files= models.FileField(null=True,blank=True,upload_to='pdf')
-    hotel = models.ForeignKey(Hotel_of_course,on_delete=models.SET_NULL,null=True,blank=True)
+    place_of_course = models.ForeignKey(Halls,on_delete=models.SET_NULL,null=True,blank=True)
     facilitator=models.ForeignKey(Facilitator,on_delete=models.SET_NULL,null=True)
     Sales_man=models.ForeignKey(Employee,on_delete=models.SET_NULL,null=True,related_name="courses")
     trainer=models.ForeignKey(Trainer,on_delete=models.SET_NULL,null=True,blank=True,related_name="courses")
@@ -367,3 +371,41 @@ class Notification(models.Model):
 
 
 
+
+class Comments(models.Model):
+    comment_id=models.AutoField(primary_key=True)
+    trainer=models.ForeignKey(Trainer,on_delete=models.CASCADE,related_name="comments")
+    employee=models.ForeignKey(Employee,on_delete=models.CASCADE)
+    comment=models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+
+    def __str__(self):
+        return f"{self.employee} comment: {self.comment}"
+
+
+
+class Contract(models.Model):
+    contract_id=models.AutoField(primary_key=True)
+    title=models.CharField(max_length=128,blank=True,null=True)
+    trainer=models.ForeignKey(Trainer,on_delete=models.CASCADE,blank=True,null=True)
+    employee=models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
+    client=models.ForeignKey(Client,on_delete=models.CASCADE,blank=True,null=True)
+    contract=models.FileField(null=True,blank=True,upload_to='pdf')
+    comments=models.TextField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    # add contract 
+    def __str__(self):
+        return f"trainer: {self.trainer} client: {self.client} contract: {self.contract}"
+
+class Invoice(models.Model):
+    invoice_id=models.AutoField(primary_key=True)
+    title=models.CharField(max_length=128,blank=True,null=True)
+    trainer=models.ForeignKey(Trainer,on_delete=models.CASCADE,blank=True,null=True)
+    employee=models.ForeignKey(Employee,on_delete=models.CASCADE,blank=True,null=True)
+    client=models.ForeignKey(Client,on_delete=models.CASCADE,blank=True,null=True)
+    invoice=models.FileField(null=True,blank=True,upload_to='pdf')
+    comments=models.TextField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+
+    def __str__(self):
+        return f"trainer: {self.trainer} client: {self.client} invoice: {self.invoice}"

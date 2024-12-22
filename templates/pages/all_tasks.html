@@ -12,30 +12,31 @@ Home
     {% comment %}
       Tickets
     {% endcomment %}
+
+    {% if user.is_superuser %}
     <div class="pt-12 flex items-center justify-center gap-3">
-        <div class="total flex item-center justify-center p-8 flex-col text-center rounded-lg bg-indigo-400">
+        <div id="total_btn" class="total cursor-pointer hover:bg-indigo-500 flex item-center justify-center p-12 flex-col text-center rounded-lg bg-indigo-400">
             <div>{{employee_tasks.count}}</div>
-            <h3 class="text-2xl font-bold text-black">Total Tickets</h3>
+            <a href="{% url 'all_tasks' %}">Total Tickets</a>
         </div>
-        <div class="inprogress flex item-center justify-center p-8 flex-col text-center rounded-lg bg-amber-200">
+        <div class="inprogress flex item-center hover:bg-amber-300 justify-center p-12 flex-col text-center rounded-lg bg-amber-200">
             <div>{{employee_inprogress.count}}</div>
-            <h3 class="text-2xl font-bold text-black">Inprogress Tickets</h3>
+            <a href="{% url 'all_tasks' %}?stage=inprogress">Inprogress Tickets</a>
 
         </div>
-        <div class="stuck flex item-center justify-center p-8 flex-col text-center rounded-lg bg-cyan-400">
+        <div class="stuck flex item-center hover:bg-cyan-400 justify-center p-12 flex-col text-center rounded-lg bg-cyan-400">
             <div>{{employee_stuck.count}}</div>
-            <h3 class="text-2xl font-bold text-black">Stuck Tickets</h3>
+            <a href="{% url 'all_tasks' %}?stage=stuck">Stuck Tickets</a>
         </div>
-        <div class="missed flex item-center justify-center p-8 flex-col text-center rounded-lg bg-red-400">
-            <div>{{employee_missed.count}}</div>
-            <h3 class="text-2xl font-bold text-black">Missed Tickets</h3>
+        <div class="missed flex item-center justify-center p-12 hover:bg-red-500 flex-col text-center rounded-lg bg-red-400">
+            <div>{{employee_missed.count}}</div>  
+            <a href="{% url 'all_tasks' %}?stage=missed">Missed Tickets</a>
         </div>
-        <div class="done flex item-center justify-center p-8 flex-col text-center rounded-lg bg-green-400">
+        <div class="done flex item-center justify-center p-12 flex-col hover:bg-green-500 text-center rounded-lg bg-green-400">
             <div>{{employee_done.count}}</div>
-            <h3 class="text-2xl font-bold text-black">Done Tickets</h3>
+            <a href="{% url 'all_tasks' %}?stage=done">Done Tickets</a>
         </div>
     </div>
-
     {% comment %}
       Add Tickets
     {% endcomment %}
@@ -117,6 +118,9 @@ Home
         
     </div>
     </div>
+    {% else %}
+    <h1 class="text-2xl font-semibold tracking-wider text-center border-b-2 pb-2 mt-14 w-1/2 mx-auto">Sorry You are not authorized to View this page, try login as Admin!</h1>
+    {% endif %}
 
 
 {% endblock content %}

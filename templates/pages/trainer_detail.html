@@ -185,8 +185,25 @@ Trainer
     <div class="text-center mt-12 w-1/2 mx-auto shadow-lg p-2 rounded-lg">
         <h3 class="text-2xl font-semibold border-b-4 w-fit mx-auto"> Comments</h3>
         <div class="text-start mt-2">
-
+            {% if selected_trainer.comments.all %}
+            {%for comment in selected_trainer.comments.all %}
+            <div class="flex  items-center justify-between ">
+                <div class="flex flex-col items-start justify-center border-b-2">
+                    <p>{{comment.comment}}</p>
+                    <p class="text-xs text-slate-400">By {{comment.employee.firstname}} on {{comment.created_at|timesince:""}} ago</p>
+                </div>
+                {% if comment.employee.employee_id == employee.employee_id %}
+                <div>
+                    <a href="{% url 'trainers'%}delete/{{comment.comment_id}}/{{selected_trainer.trainer_id}}">
+                        <i class="fa-solid fa-trash text-slate-500 cursor-pointer"></i>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
             <p>No comments for this trainer</p>
+            {% endif %}
         </div>
     </div>
     </div>

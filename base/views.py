@@ -1,17 +1,23 @@
+from audioop import reverse
 from email import message
+from math import log
 from django.core.mail import send_mail, send_mass_mail
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from .models import Contract, Employee,Client,Course_status, Invoice,Project,Course,Course_type,Repository,AsessmentBank,Simulation,Trainer,Task,Manager,Design_Request,Portfolio,Notification
 from django.db.models import Count ,Q
 from django.contrib import messages
 from django.shortcuts import redirect ,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
 import json
 from .forms import TaskForm
 import openai
 from django.conf import settings
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+
 
 openai.api_key = settings.OPENAI_API_KEY
 
@@ -51,6 +57,7 @@ def logout_user(request):
         logout(request)
         return redirect("login")
     return render(request, 'pages/logout.html')
+
 
 def chat_gpt(request):
     if request.method == "POST":
